@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="TvHeadendGui.Views.Recordings"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+
+    <StackPanel>
+        <ToolBar>
+            <Button
+                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                Width="24"
+                ToolTip="Reload Recordings"
+                Height="24"
+                Command="{Binding ReloadRecordings}"
+                Margin="2"
+                >
+                <iconPacks:PackIconFontAwesome Kind="SyncAltSolid" />
+            </Button>
+            <Button
+                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                Width="24"
+                ToolTip="Download selected Recording"
+                Height="24"
+                Margin="2"
+                Command="{Binding DownloadSelectedRecording}"
+            >
+                <iconPacks:PackIconOcticons Kind="DesktopDownload" />
+            </Button>
+
+            <Button
+                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                Width="24"
+                ToolTip="Delete selected Recording"
+                Height="24"
+                Margin="2"
+                Command="{Binding DeleteSelectedRecording}"
+                >
+                <iconPacks:PackIconModern Kind="Delete" />
+            </Button>
+        </ToolBar>
+        <DataGrid 
+            ItemsSource="{Binding Recordings}"
+            SelectionMode="Single"
+            SelectedItem="{Binding SelectedRecording}"
+            AutoGenerateColumns="False"
+            >
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Start" Binding="{Binding Path=StartReal, StringFormat=\{0:dd.MM. HH:mm\}}"/>
+                <DataGridTextColumn Header="Stop" Binding="{Binding Path=StopReal, StringFormat=\{0:dd.MM. HH:mm\}}"/>
+                <DataGridTextColumn Header="Channel" Binding="{Binding Path=ChannelName}"/>
+                <DataGridTextColumn Header="Title" Binding="{Binding Path=Title}" />
+                <DataGridTextColumn Header="Status" Binding="{Binding Path=Status}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <TextBlock Text="{Binding Test}" />
+
+    </StackPanel>
+</UserControl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

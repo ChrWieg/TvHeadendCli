@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="TvHeadendGui.Views.NavBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"      
+       xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+            
+            >
+    <Grid>
+        <!--<mah:FlyoutsControl>
+            <mah:Flyout Header="Navigation" Position="Left" 
+                        IsOpen="{Binding IsOpen}">-->
+            <StackPanel Orientation="Vertical">
+                <Button Content="Recordings" Command="{Binding NavigateToRecordings}" Margin="5"/>
+                <Button Content="Channels" Command="{Binding NavigateToChannels}" Margin="5"/>
+            </StackPanel>
+        <!--</mah:Flyout>
+        </mah:FlyoutsControl>-->
+
+    </Grid>
+</UserControl>
+

@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="TvHeadendGui.Views.Channels"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             >
+    <DockPanel LastChildFill="True">
+        <ToolBar DockPanel.Dock="Top" >
+            <Button
+                
+                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                Width="24"
+                Height="24"
+                Command="{Binding ExportChannels}"
+                ToolTip="Export Channels to file"
+            >
+                <iconPacks:PackIconEntypo Kind="Export" />
+            </Button>
+        </ToolBar>
+        <DataGrid ItemsSource="{Binding Channels}"
+                  AutoGenerateColumns="False"
+                  VerticalScrollBarVisibility="Auto"
+                  >
+            <DataGrid.Columns>
+            <!--<DataGridTextColumn Header="Key" Binding="{Binding Path=ChannelKey}"/>-->
+            <DataGridTextColumn Header="Channel" Binding="{Binding Path=ChannelName}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>
+
