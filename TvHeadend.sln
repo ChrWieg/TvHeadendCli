@@ -12,6 +12,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvHeadendCli", "TvHeadendCli\TvHeadendCli.csproj", "{77FFE84C-5F8F-4088-B6FA-187E18ED2EB8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Binaries", "Binaries", "{B50CDF61-8AC8-4759-97FD-8552C816C2BF}"
+	ProjectSection(SolutionItems) = preProject
+		Binaries\TvHeadendCli.zip = Binaries\TvHeadendCli.zip
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

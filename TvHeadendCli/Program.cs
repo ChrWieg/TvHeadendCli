@@ -8,9 +8,10 @@ namespace TvHeadendCli
     static class Program
     {
 
-        private static readonly string CreateParametersExample = @"-acreate -url""http://pihole:9981"" -un""{device_username}"" -up""{device_password}"" -c""{channel_name_external}"" -t""{maxlength(title,""200"")}"" -p""{production_year}"" -d""{description}"" -r""TV-Browser"" -s{start_unix} -e{end_unix}";
-        private static readonly string RemoveParametersExample = @"-aremove -url""http://pihole:9981"" -un""{device_username}"" -up""{device_password}"" -c""{channel_name_external}"" -s{start_unix}";
-        
+        private static readonly string CreateParametersExample = @"-acreate -url""http://tvheadend:9981"" -un""{device_username}"" -up""{device_password}"" -c""{channel_name_external}"" -t""{maxlength(title,""200"")}"" -p""{production_year}"" -d""{description}"" -r""TV-Browser"" -s{start_unix} -e{end_unix}";
+        private static readonly string RemoveParametersExample = @"-aremove -url""http://tvheadend:9981"" -un""{device_username}"" -up""{device_password}"" -c""{channel_name_external}"" -s{start_unix}";
+        private static readonly string GetChannelNamesExample = @"-channels -url""http://tvheadend:9981"" -un""device_username"" -up""device_password""";
+
         /// <summary>
         /// Der Haupteinstiegspunkt für die Anwendung.
         /// </summary>
@@ -38,6 +39,10 @@ namespace TvHeadendCli
 
                 ITvHeadend tvHeadend = new TvHeadend(args);
 
+                //Action -channels
+                if (args[0].ToLower().StartsWith("-channels"))
+                    return GetChannels(tvHeadend);
+
                 //Try to get recording info from args
                 var recording = tvHeadend.GetRecordingFromArgs(args, 1);
                 if (recording == null)
@@ -46,7 +51,7 @@ namespace TvHeadendCli
                     return -1;
                 }
 
-                //Action
+                //Recording Actions
                 if (args[0].ToLower().StartsWith("-acreate"))
                     return CreateRecording(tvHeadend, recording);
 
@@ -87,19 +92,33 @@ namespace TvHeadendCli
             return -1;
         }
 
+        private static int GetChannels(ITvHeadend tvHeadend)
+        {
+            Console.WriteLine("Channel names from TvHeadend");
+
+            foreach (var tvHeadendChannel in tvHeadend.Channels)
+                Console.WriteLine(tvHeadendChannel.ChannelName);
+            return 0;
+        }
+
         private static void WriteHelp()
         {
             Console.WriteLine();
             Console.WriteLine("Command Line Examples:");
             Console.WriteLine();
-            Console.WriteLine("Tv-Headend Create Recording:");
+            Console.WriteLine("Tv-Headend Create Recording with TV-Browser Capture-Plugin:");
             Console.WriteLine(CreateParametersExample);
             Console.WriteLine();
-            Console.WriteLine("Tv-Headend Remove Recording:");
+            Console.WriteLine("Tv-Headend Remove Recording with TV-Browser Capture-Plugin:");
             Console.WriteLine(RemoveParametersExample);
             Console.WriteLine();
-            Console.WriteLine("Press Enter to quit");
-            Console.ReadLine();
+            Console.WriteLine("Get channel names from Tv-Headend:");
+            Console.WriteLine(GetChannelNamesExample);
+            Console.WriteLine();
+            Console.WriteLine("Use pipe: > Channels.txt to redirekt output into a file.");
+            //Console.WriteLine();
+            //Console.WriteLine("Press Enter to quit");
+            //Console.ReadLine();
         }
     }
 }
