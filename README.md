@@ -1,5 +1,5 @@
 # TvHeadend
-<h2>Interface for TvHeadend</h2>
+<h2>TV-Browser - Capture Plugin (Aufnahmesteuerung) - Interface for TvHeadend</h2>
 
 <p><a href="https://tvheadend.org/">TvHeadend</a> is a very well working solution for recording tv. It has a quite good web interface.
 But I prefere <a href="https://www.tvbrowser.org/">TV-Browser</a> for searching the tv program. So I was looking for a way to schedule TvHeadend recordings with TV-Browser.</p>
