@@ -10,4 +10,4 @@ Then I realised that there is a rest api for TvHeadend! Thanks to dave-p: https:
 
 So here is a beta version for this, still under construction. It works with the TV-Browser CapturePlugin (Aufnahmesteuerung).
 
-I'm going to provide the binaries and a short tutorial soon.
+I'm going to provide a short tutorial soon.
