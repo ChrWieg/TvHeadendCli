@@ -94,7 +94,7 @@ namespace TvHeadendCli
 
         private static int GetChannels(ITvHeadend tvHeadend)
         {
-            Console.WriteLine("Channel names from TvHeadend");
+            Console.WriteLine("Channel names from TvHeadend:");
 
             foreach (var tvHeadendChannel in tvHeadend.Channels)
                 Console.WriteLine(tvHeadendChannel.ChannelName);

@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -24,23 +25,36 @@ namespace TvHeadendLib
 
         private RestClient _restClient;
 
-        /// <summary>
-        /// Use this if no credentials are required
-        /// </summary>
-        /// <param name="url">e.g. http://tvheadend:9981</param>
-        public TvHeadend(string url)
-        {
-            _restClient = new RestClient(url);
-        }
+        ///// <summary>
+        ///// Use this if no credentials are required
+        ///// </summary>
+        ///// <param name="url">e.g. http://tvheadend:9981</param>
+        //public TvHeadend(string url)
+        //{
+        //    _restClient = new RestClient(url);
+        //}
 
         /// <summary>
-        /// Provide url an credentials
+        /// Provide url and credentials
         /// </summary>
         /// <param name="url">e.g. http://tvheadend:9981</param>
         /// <param name="credential">If null the program tries to retrieve the credentials from the Windows credential store. You might be prompted for credentials if they are not stored yet.</param>
         public TvHeadend(string url, Credential credential)
         {
             InitializeRestClient(url, credential);
+        }
+
+        /// <summary>
+        /// Provide url, credentials will be retrieved from windows credential cache
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="useCredentialCache"></param>
+        public TvHeadend(string url, bool useCredentialCache)
+        {
+            if (useCredentialCache)
+                InitializeRestClient(url);
+            else
+                _restClient = new RestClient(url);
         }
 
         public TvHeadend(string[] args)
@@ -52,20 +66,30 @@ namespace TvHeadendLib
             InitializeRestClient(url, credential);
         }
 
+        private void InitializeRestClient(string url)
+        {
+            var credentialFromStore = CredentialHelper.GetStoredCredential();
+            var httpBasicAuthenticator = new HttpBasicAuthenticator(credentialFromStore.UserName, credentialFromStore.Password);
+            _restClient = new RestClient(url) { Authenticator = httpBasicAuthenticator };
+        }
+
         private void InitializeRestClient(string url, Credential credential)
         {
             HttpBasicAuthenticator httpBasicAuthenticator;
             if (credential != null)
             {
                 httpBasicAuthenticator = new HttpBasicAuthenticator(credential.UserName, credential.Password);
+                _restClient = new RestClient(url) { Authenticator = httpBasicAuthenticator };
             }
             else
             {
-                var credentialFromStore = CredentialHelper.GetStoredCredential();
-                httpBasicAuthenticator = new HttpBasicAuthenticator(credentialFromStore.UserName, credentialFromStore.Password);
+                _restClient = new RestClient(url);
+                //return;
+                //var credentialFromStore = CredentialHelper.GetStoredCredential();
+                //httpBasicAuthenticator = new HttpBasicAuthenticator(credentialFromStore.UserName, credentialFromStore.Password);
             }
 
-            _restClient = new RestClient(url) {Authenticator = httpBasicAuthenticator};
+            //_restClient = new RestClient(url) {Authenticator = httpBasicAuthenticator};
         }
 
         public ObservableCollection<Channel> Channels => GetChannels();
@@ -82,6 +106,9 @@ namespace TvHeadendLib
             };
 
             var response = _restClient.Execute<ChannelData>(request);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new UnauthorizedAccessException($"The Server has denied the operation: {response.StatusCode}");
 
             var list = response?.Data?.Entries.Select(e => new Channel {ChannelName = e.Val, ChannelKey = e.Key}).OrderBy(e=>e.ChannelName).ToList();
 
@@ -101,6 +128,9 @@ namespace TvHeadendLib
             };
 
             var response = _restClient.Execute<RecordingData>(request);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new UnauthorizedAccessException($"The Server has denied the operation: {response.StatusCode}");
 
             var result = response?.Data?.Entries?.Select(e =>
                 new Recording
@@ -198,6 +228,9 @@ namespace TvHeadendLib
 
             var response = _restClient.Execute(request);
 
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new UnauthorizedAccessException($"The Server has denied the operation: {response.StatusCode}");
+
             if (!response.IsSuccessful || string.IsNullOrWhiteSpace(response.Content))
                 throw new HttpRequestException("Web-request failed!");
 
@@ -272,6 +305,10 @@ namespace TvHeadendLib
             };
 
             var response = _restClient.Execute(request);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new UnauthorizedAccessException($"The Server has denied the operation: {response.StatusCode}");
+
             return response.IsSuccessful;
         }
 

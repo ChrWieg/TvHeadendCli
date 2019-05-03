@@ -23,7 +23,7 @@ namespace TvHeadendGui
             var url = TryGetUrlFromSettings();
 
             containerRegistry.RegisterInstance(typeof(IRegionManager), new RegionManager());
-            containerRegistry.RegisterInstance(typeof(ITvHeadend), new TvHeadend(url,null));
+            containerRegistry.RegisterInstance(typeof(ITvHeadend), new TvHeadend(url,true));
 
             containerRegistry.Register(typeof(object), typeof(NavBar), nameof(NavBar));
             containerRegistry.Register(typeof(object), typeof(Channels), nameof(Channels));
