@@ -35,6 +35,9 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>tvheadend.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AdysTech.CredentialManager, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\AdysTech.CredentialManager.1.8.0\lib\net45\AdysTech.CredentialManager.dll</HintPath>
@@ -83,6 +86,9 @@
       <Project>{e16ae965-e6f8-4ab1-9269-f3b381182a82}</Project>
       <Name>TvHeadendLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="tvheadend.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -17,6 +17,10 @@ namespace TvHeadendLib
     public class TvHeadend : ITvHeadend
     {
         //https://github.com/dave-p/TVH-API-docs/wiki
+    
+       /* ToDo: Startzeit Sekunden fehlten bei einem Recording, dadurch Remove fehlgeschlagen
+        *
+        */
 
         private RestClient _restClient;
 
