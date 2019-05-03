@@ -11,3 +11,5 @@ But I prefere <a href="https://www.tvbrowser.org/">TV-Browser</a> for searching 
 <p>Here is a beta version for this, still under construction but working. It works with the TV-Browser <a href="https://wiki.tvbrowser.org/index.php/Aufnahmesteuerung">Aufnahmesteuerung</a>.</p>
 
 <p>A tutorial for setting up the tool with TV-Browser you will find here: <a href="https://github.com/ChrWieg/TvHeadendCli/blob/master/Docs/HowToSetupTvBrowser.docx">docx</a> or here <a href="https://github.com/ChrWieg/TvHeadendCli/blob/master/Docs/HowToSetupTvBrowser.pdf">pdf</a>.</p>
+
+<p>I've added Binaries of TvHeadendGui. This is Alpha and only usable for testing yet. More about it will follow soon...</p>
