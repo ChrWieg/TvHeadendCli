@@ -3,10 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
-    <StackPanel>
-        <ToolBar>
+    <DockPanel LastChildFill="False" >
+
+        <ToolBar DockPanel.Dock="Top" >
             <Button
                 Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
                 Width="24"
@@ -38,8 +40,17 @@
                 >
                 <iconPacks:PackIconModern Kind="Delete" />
             </Button>
+            <Button 
+                Visibility="{Binding ProgressBarVisibility}" 
+                Content="Abbort" 
+                ToolTip="Abbort the running download"
+                Margin="2 0 0 0" 
+                Command="{Binding CancelDownload}" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"/>
         </ToolBar>
-        <DataGrid 
+
+        <DataGrid DockPanel.Dock="Top"
             ItemsSource="{Binding Recordings}"
             SelectionMode="Single"
             SelectedItem="{Binding SelectedRecording}"
@@ -47,18 +58,83 @@
             >
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Start" Binding="{Binding Path=StartReal, StringFormat=\{0:dd.MM. HH:mm\}}"/>
-                <DataGridTextColumn Header="Stop" Binding="{Binding Path=StopReal, StringFormat=\{0:dd.MM. HH:mm\}}"/>
-                <DataGridTextColumn Header="Channel" Binding="{Binding Path=ChannelName}"/>
-                <DataGridTextColumn Header="Title" Binding="{Binding Path=Title}" />
-                <DataGridTextColumn Header="Status" Binding="{Binding Path=Status}" />
+                <DataGridTextColumn Header="Start" Binding="{Binding Path=StartReal, StringFormat=\{0:dd.MM. HH:mm\}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Stop" Binding="{Binding Path=StopReal, StringFormat=\{0:dd.MM. HH:mm\}}"  IsReadOnly="True"/>
+                <DataGridTextColumn Header="Channel" Binding="{Binding Path=ChannelName}"  IsReadOnly="True"/>
+                <DataGridTextColumn Header="Title" Binding="{Binding Path=Title}"  IsReadOnly="True"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding Path=Status}"  IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-        
-        <TextBlock Text="{Binding Test}" />
 
-    </StackPanel>
+        <StatusBar DockPanel.Dock="Bottom" >
+            <StackPanel Orientation="Horizontal" >
+                <Label Content="{Binding StatusText}" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
+                <mah:MetroProgressBar 
+                    Value="{Binding ProgressValue}" 
+                    Margin="5 0 0 0" 
+                    Width="100" Height="10" 
+                    Visibility="{Binding ProgressBarVisibility}"
+                    Foreground="White"
+                    BorderBrush="White"
+                    BorderThickness="1"
+                    />
+                <!--<Grid Height="15">
+                    <Button Visibility="{Binding ProgressBarVisibility}" Content="Abbort" Margin="5 0 0 0" Command="{Binding CancelDownload}" FontSize="8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Grid>-->
+            </StackPanel>
+        </StatusBar>
+
+    </DockPanel>
+
 </UserControl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

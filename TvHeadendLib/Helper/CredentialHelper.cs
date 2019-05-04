@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Net;
 using AdysTech.CredentialManager;
 using TvHeadendLib.Models;
 using TvHeadendLib.Properties;
@@ -11,7 +12,7 @@ namespace TvHeadendLib.Helper
         private static Credential _networkCredential;
         private const string DefaultCredentialStoreServiceName = "TvHeadendApi";
 
-        public static Credential GetStoredCredential()
+        public static Credential GetStoredCredential(bool promptForCredentialsIfNotFond)
         {
             var serviceName = GetCredentialStoreServiceName();
 
@@ -22,6 +23,9 @@ namespace TvHeadendLib.Helper
 
             if (credentialFromStore != null)
                 return _networkCredential = new Credential {UserName = credentialFromStore.UserName, Password = credentialFromStore.Password};
+
+            if (!promptForCredentialsIfNotFond)
+                return null;
 
             var saveCredentials = true;
             var credentialFromUser = CredentialManager.PromptForCredentials(serviceName, ref saveCredentials, "Please provide credentials", $"Credentials for service {serviceName}");
@@ -37,19 +41,23 @@ namespace TvHeadendLib.Helper
             return _networkCredential;
         }
 
-        public static void ResetCredential()
+        public static void ResetCredential(NetworkCredential networkCredential)
         {
             var serviceName = GetCredentialStoreServiceName();
 
             var saveCredentials = true;
-            var credentialFromUser = CredentialManager.PromptForCredentials(serviceName, ref saveCredentials, "Please provide credentials", $"Credentials for service {serviceName}");
 
-            if (credentialFromUser == null) return;
+            if (networkCredential == null)
+            {
+                networkCredential = CredentialManager.PromptForCredentials(serviceName, ref saveCredentials, "Please provide credentials", $"Credentials for service {serviceName}");
+            }
+
+            if (networkCredential == null) return;
 
             if (saveCredentials)
-                CredentialManager.SaveCredentials(serviceName, credentialFromUser);
+                CredentialManager.SaveCredentials(serviceName, networkCredential);
 
-            _networkCredential = new Credential { UserName = credentialFromUser.UserName, Password = credentialFromUser.Password };
+            _networkCredential = new Credential { UserName = networkCredential.UserName, Password = networkCredential.Password };
         }
 
         public static string GetCredentialStoreServiceName()

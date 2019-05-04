@@ -1,7 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RestSharp.Authenticators;
-using TvHeadendLib;
 using TvHeadendLib.Helper;
 using TvHeadendLib.Interfaces;
 using TvHeadendLib.Models;
@@ -62,7 +60,7 @@ namespace TvHeadend.UnitTest
             Assert.IsFalse(string.IsNullOrWhiteSpace(recording.Uuid));
             Console.WriteLine(recording.Uuid);
 
-            var success = tvHeadEnd.RemoveRecording(recordingToCreate);
+            var success = tvHeadEnd.RemoveRecordingSchedule(recordingToCreate);
 
             Assert.IsTrue(success);
         }
@@ -105,7 +103,7 @@ namespace TvHeadend.UnitTest
         {
             //CredentialHelper.ResetCredentials();
 
-            var credential = CredentialHelper.GetStoredCredential();
+            var credential = CredentialHelper.GetStoredCredential(true);
 
             Assert.IsNotNull(credential);
 

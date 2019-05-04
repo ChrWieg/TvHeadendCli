@@ -17,6 +17,8 @@ namespace TvHeadendLib.Models
 
         public int pri { get; set; }
 
+        public string url { get; set; }
+
         public string filename { get; set; }
     }
 }

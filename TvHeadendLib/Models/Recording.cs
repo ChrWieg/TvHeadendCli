@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Policy;
 
 namespace TvHeadendLib.Models
 {
@@ -10,6 +11,7 @@ namespace TvHeadendLib.Models
         public string Status { get; set; }
 
         public string FileFullName { get; set; }
+        public string Url { get; set; }
 
         public override string ToString()
         {

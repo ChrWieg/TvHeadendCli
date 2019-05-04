@@ -16,6 +16,5 @@ namespace TvHeadendGui.ViewModels
             RegionManager = regionManager;
             TvHeadend = tvHeadend;
         }
-
     }
 }

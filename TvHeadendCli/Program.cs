@@ -44,7 +44,7 @@ namespace TvHeadendCli
                     return GetChannels(tvHeadend);
 
                 //Try to get recording info from args
-                var recording = tvHeadend.GetRecordingFromArgs(args, 1);
+                var recording = tvHeadend.GetRecordingFromArgs(args); // , 1
                 if (recording == null)
                 {
                     Console.WriteLine("Error: unable to resolve channel name");
@@ -69,7 +69,7 @@ namespace TvHeadendCli
 
         private static int RemoveRecording(ITvHeadend tvHeadend, Recording recording)
         {
-            if (!tvHeadend.RemoveRecording(recording))
+            if (!tvHeadend.RemoveRecordingSchedule(recording))
             {
                 Console.WriteLine("Error: removing failed!");
                 return -1;

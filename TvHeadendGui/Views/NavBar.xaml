@@ -13,6 +13,7 @@
             <StackPanel Orientation="Vertical">
                 <Button Content="Recordings" Command="{Binding NavigateToRecordings}" Margin="5"/>
                 <Button Content="Channels" Command="{Binding NavigateToChannels}" Margin="5"/>
+                <Button Content="Settings" Command="{Binding NavigateToSettings}" Margin="5"/>
             </StackPanel>
         <!--</mah:Flyout>
         </mah:FlyoutsControl>-->

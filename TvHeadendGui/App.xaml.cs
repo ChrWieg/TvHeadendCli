@@ -28,11 +28,22 @@ namespace TvHeadendGui
             containerRegistry.Register(typeof(object), typeof(NavBar), nameof(NavBar));
             containerRegistry.Register(typeof(object), typeof(Channels), nameof(Channels));
             containerRegistry.Register(typeof(object), typeof(Recordings), nameof(Recordings));
+            containerRegistry.Register(typeof(object), typeof(Settings), nameof(Settings));
         }
 
         private string TryGetUrlFromSettings()
         {
-            //ToDo: Settings / Parameter
+            //ToDo: implement and test creating Settings with Default values
+            return "http://pihole:9981";
+
+            //if (TvHeadendGui.Properties.Settings.Default != null)
+            //{
+                var serverName = TvHeadendGui.Properties.Settings.Default.ServerName;
+                var portNumber = TvHeadendGui.Properties.Settings.Default.PortNumber;
+
+                return $"http://{serverName}:{portNumber}";
+            //}
+
             return "http://pihole:9981";
         }
     }
