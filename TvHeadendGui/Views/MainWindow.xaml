@@ -4,7 +4,7 @@
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-        Title="{Binding Title}" Height="350" Width="525"
+        Title="{Binding Title}" MaxWidth="600" MaxHeight="500"
         xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
         SizeToContent="Width"
         WindowStartupLocation="CenterScreen"

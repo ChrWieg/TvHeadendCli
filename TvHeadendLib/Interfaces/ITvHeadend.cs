@@ -19,5 +19,9 @@ namespace TvHeadendLib.Interfaces
         string RestClientIsOkay();
 
         ICredentials Credentials { get; }
+
+        string GetCreateParameterString();
+        string GetRemoveParameterString();
+
     }
 }

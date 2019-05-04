@@ -7,7 +7,7 @@
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              >
-    <DockPanel LastChildFill="False">
+    <DockPanel LastChildFill="False" MaxWidth="500">
         <ToolBar DockPanel.Dock="Top">
             <Button
                 Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
@@ -55,6 +55,9 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
 
             <Label Grid.Column="0" Grid.Row="0" Content="Server Name" />
@@ -81,6 +84,56 @@
             <Label Grid.Column="0" Grid.Row="5" Content="Video Download Path" />
             <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding VideoDownloadPath,UpdateSourceTrigger=PropertyChanged}" />
 
+            <Label Grid.Column="0" Grid.Row="6" 
+                   Content="Aufnahmesteuerung" 
+                   Margin="0 5 0 5"/>
+
+            <Label Grid.Column="1" Grid.Row="6" 
+                   Content="Copy these strings to the fields at Aufnahmesteuerung:" 
+                   Margin="0 5 0 5"/>
+
+            <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="7" VerticalAlignment="Top">
+                <Button 
+                        ToolTip="Copy to Clipboard" 
+                    Width="24"
+                    Height="24"
+
+                        Command="{Binding CopyToClipBoard}" 
+                        CommandParameter="{Binding ElementName=CreateParameterString, Path=Text}"
+                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                    <iconPacks:PackIconOcticons Kind="Clippy" />
+                </Button>
+                <Label Content="Create" />
+            </StackPanel>
+
+            <TextBox Grid.Column="1" Grid.Row="7" 
+                     Name="CreateParameterString"
+                     Text="{Binding CreateParameterString,UpdateSourceTrigger=PropertyChanged}" 
+                     TextWrapping="Wrap"
+                     MaxLines="4"
+                     IsReadOnly="True"/>
+
+            <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="8" VerticalAlignment="Top">
+                <Button 
+                    ToolTip="Copy to Clipboard" 
+                    Command="{Binding CopyToClipBoard}" 
+                    Width="24"
+                    Height="24"
+
+                    CommandParameter="{Binding ElementName=RemoveParameterString, Path=Text}"
+                    Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}">
+                    <iconPacks:PackIconOcticons Kind="Clippy" />
+                </Button>
+                <Label Content="Remove" />
+            </StackPanel>
+
+            <TextBox Grid.Column="1" Grid.Row="8" 
+                     Name="RemoveParameterString"
+                     Text="{Binding RemoveParameterString,UpdateSourceTrigger=PropertyChanged}" 
+                     TextWrapping="Wrap"
+                     MaxLines="4"
+                     IsReadOnly="True"/>
+
         </Grid>
 
         <StatusBar DockPanel.Dock="Bottom" >
@@ -95,12 +148,108 @@
                     BorderBrush="White"
                     BorderThickness="1"
                 />
-                <Button Visibility="{Binding ProgressBarVisibility}" Content="Abbort" Margin="5 0 0 0" Command="{Binding CancelDownload}" FontSize="8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <!--<Button Visibility="{Binding ProgressBarVisibility}" Content="Abbort" Margin="5 0 0 0" Command="{Binding CancelDownload}" FontSize="8" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
             </StackPanel>
         </StatusBar>
 
     </DockPanel>
 </UserControl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

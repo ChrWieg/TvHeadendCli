@@ -18,10 +18,44 @@ namespace TvHeadendLib
     public class TvHeadend : ITvHeadend
     {
         //https://github.com/dave-p/TVH-API-docs/wiki
-    
-       /* ToDo: Startzeit Sekunden fehlten bei einem Recording, dadurch Remove fehlgeschlagen
-        *
-        */
+
+        private string _credentialPart = @"-un""{device_username}"" -up""{device_password}""";
+        private string _createPart = @"-c""{channel_name_external}"" -t""{maxlength(title,""200"")}"" -p""{production_year}"" -d""{description}"" -r""TV-Browser"" -s{start_unix} -e{end_unix}";
+        private string _removePart = @"-c""{channel_name_external}"" -s{start_unix}";
+
+        /// <summary>
+        /// Create-Parameters for Aufnahmesteuerung
+        /// </summary>
+        /// <returns></returns>
+        public string GetCreateParameterString()
+        {
+            var result = @"-acreate";
+            result += $" -url\"{TvHeadendUri.AbsoluteUri}\"";
+            if (Credentials != null)
+                result += " " + _credentialPart;
+            result += " " + _createPart;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Remove-Parameters for Aufnahmesteuerung
+        /// </summary>
+        /// <returns></returns>
+        public string GetRemoveParameterString()
+        {
+            var result = @"-aremove";
+            result += $" -url\"{TvHeadendUri.AbsoluteUri}\"";
+            if (Credentials != null)
+                result += " " + _credentialPart;
+            result += " " + _removePart;
+
+            return result;
+        }
+
+        /* ToDo: Startzeit Sekunden fehlten bei einem Recording, dadurch Remove fehlgeschlagen
+         *
+         */
 
         private RestClient _restClient;
         private Uri _tvHeadendUri;

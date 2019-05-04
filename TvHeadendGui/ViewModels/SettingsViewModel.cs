@@ -16,6 +16,7 @@ namespace TvHeadendGui.ViewModels
         public DelegateCommand SaveChanges { get; set; }
         public DelegateCommand ResetToDefault { get; set; }
         public DelegateCommand TestSettings { get; set; }
+        public DelegateCommand<string> CopyToClipBoard { get; set; }
 
         public string ServerName { get; set; }
         public int PortNumber { get; set; }
@@ -26,6 +27,9 @@ namespace TvHeadendGui.ViewModels
 
         public string VideoDownloadPath { get; set; }
 
+        public string CreateParameterString { get; set; }
+
+        public string RemoveParameterString { get; set; }
 
         public int ProgressValue { get; set; }
         public Visibility ProgressBarVisibility { get; set; }
@@ -34,13 +38,13 @@ namespace TvHeadendGui.ViewModels
         [AlsoNotifyFor(nameof(AuthenticationRequired))]
         public Visibility UnPwVisibility => AuthenticationRequired ? Visibility.Visible : Visibility.Collapsed;
 
-
         public SettingsViewModel(IRegionManager regionManager, ITvHeadend tvHeadend) : base(regionManager, tvHeadend)
         {
             ProgressBarVisibility = Visibility.Collapsed;
             SaveChanges = new DelegateCommand(OnSaveChanges);
             ResetToDefault = new DelegateCommand(OnResetToDefault);
             TestSettings = new DelegateCommand(OnTestSettings);
+            CopyToClipBoard = new DelegateCommand<string>(Clipboard.SetText);
 
             ServerName = Settings.Default.ServerName;
             PortNumber = Settings.Default.PortNumber;
@@ -54,6 +58,9 @@ namespace TvHeadendGui.ViewModels
                 UserName = credential.UserName;
                 Password = credential.Password;
             }
+
+            CreateParameterString = TvHeadend.GetCreateParameterString();
+            RemoveParameterString = TvHeadend.GetRemoveParameterString();
 
             StatusText = "Done.";
         }
