@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using TvHeadendLib;
 using TvHeadendLib.Interfaces;
 using TvHeadendLib.Models;
@@ -22,6 +23,8 @@ namespace TvHeadendCli
 
             try
             {
+                args = PrepareArgs(args);
+
                 //first parameter is -help: reply help info then return
                 if (args[0].ToLower().StartsWith("-help"))
                 {
@@ -65,6 +68,19 @@ namespace TvHeadendCli
             }
 
             return 0;
+        }
+
+        private static string[] PrepareArgs(string[] args)
+        {
+            var joinedArgs = string.Join(" ", args);
+
+            var regEx = new Regex(@"\s(-[a-zA-Z]{1,2})");
+            var tempArgs = regEx.Replace(joinedArgs, "#####$1");
+
+            regEx = new Regex(@"#####");
+            var resultArgs = regEx.Split(tempArgs);
+
+            return resultArgs;
         }
 
         private static int RemoveRecording(ITvHeadend tvHeadend, Recording recording)

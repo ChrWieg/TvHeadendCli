@@ -74,7 +74,6 @@
     <Compile Include="Models\RecordingEntryBase.cs" />
     <Compile Include="Models\RecordingUuid.cs" />
     <Compile Include="Models\TitleData.cs" />
-    <Compile Include="Models\TvBrowserSettings.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

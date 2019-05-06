@@ -16,9 +16,9 @@ namespace TvHeadendLib.Interfaces
         bool DeleteRecordedFile(Recording recording);
 
         Recording GetRecordingFromArgs(string[] args); //, int firstIndex
-        string RestClientIsOkay();
+        string RestClientIsWorking();
 
-        ICredentials Credentials { get; }
+        Credential Credentials { get; set; }
 
         string GetCreateParameterString();
         string GetRemoveParameterString();

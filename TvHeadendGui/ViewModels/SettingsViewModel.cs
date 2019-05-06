@@ -8,6 +8,7 @@ using PropertyChanged;
 using TvHeadendGui.Properties;
 using TvHeadendLib.Helper;
 using TvHeadendLib.Interfaces;
+using TvHeadendLib.Models;
 
 namespace TvHeadendGui.ViewModels
 {
@@ -22,6 +23,7 @@ namespace TvHeadendGui.ViewModels
         public int PortNumber { get; set; }
 
         public bool AuthenticationRequired { get; set; }
+        public bool SaveCredentials { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
 
@@ -49,6 +51,7 @@ namespace TvHeadendGui.ViewModels
             ServerName = Settings.Default.ServerName;
             PortNumber = Settings.Default.PortNumber;
             AuthenticationRequired = Settings.Default.AuthenticationRequired;
+            SaveCredentials = Settings.Default.SaveCredentialsToWindowsCredentialStore;
 
             VideoDownloadPath = Settings.Default.VideoDownloadPath;
 
@@ -67,7 +70,7 @@ namespace TvHeadendGui.ViewModels
 
         private void OnTestSettings()
         {
-            StatusText = TvHeadend.RestClientIsOkay();
+            StatusText = TvHeadend.RestClientIsWorking();
         }
 
         private void OnResetToDefault()
@@ -77,6 +80,7 @@ namespace TvHeadendGui.ViewModels
                 Settings.Default.PortNumber = 9981;
                 Settings.Default.ServerName = "TvHeadend";
                 Settings.Default.AuthenticationRequired = true;
+                Settings.Default.SaveCredentialsToWindowsCredentialStore = true;
                 Settings.Default.VideoDownloadPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
                 Settings.Default.Save();
                 Settings.Default.Reload();
@@ -90,11 +94,17 @@ namespace TvHeadendGui.ViewModels
             Settings.Default.PortNumber = PortNumber;
             Settings.Default.ServerName = ServerName;
             Settings.Default.AuthenticationRequired = AuthenticationRequired;
+            Settings.Default.SaveCredentialsToWindowsCredentialStore = SaveCredentials;
             Settings.Default.VideoDownloadPath = VideoDownloadPath;
-            if (AuthenticationRequired)
-            {
-                CredentialHelper.ResetCredential(new NetworkCredential(UserName,Password));
-            }
+
+            if (AuthenticationRequired && SaveCredentials)
+                CredentialHelper.ResetCredential(new NetworkCredential(UserName, Password));
+
+            //ToDo: use https
+            var url = $"http://{ServerName}:{PortNumber}/";
+
+            TvHeadend.TvHeadendUri = new Uri(url);
+            TvHeadend.Credentials = new Credential {Password = Password, UserName = UserName};
 
             Settings.Default.Save();
             Settings.Default.Reload();

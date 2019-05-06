@@ -40,14 +40,14 @@
                 >
                 <iconPacks:PackIconModern Kind="Delete" />
             </Button>
-            <Button 
+            <!--<Button 
                 Visibility="{Binding ProgressBarVisibility}" 
                 Content="Abbort" 
                 ToolTip="Abbort the running download"
                 Margin="2 0 0 0" 
                 Command="{Binding CancelDownload}" 
                 HorizontalAlignment="Center" 
-                VerticalAlignment="Center"/>
+                VerticalAlignment="Center"/>-->
         </ToolBar>
 
         <DataGrid DockPanel.Dock="Top"
@@ -68,19 +68,32 @@
 
         <StatusBar DockPanel.Dock="Bottom" >
             <StackPanel Orientation="Horizontal" >
-                <Label Content="{Binding StatusText}" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
+                <Label Content="{Binding StatusText}" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center" 
+                       Foreground="White" />
                 <mah:MetroProgressBar 
                     Value="{Binding ProgressValue}" 
-                    Margin="5 0 0 0" 
+                    Margin="5 0 5 0" 
                     Width="100" Height="10" 
                     Visibility="{Binding ProgressBarVisibility}"
                     Foreground="White"
                     BorderBrush="White"
                     BorderThickness="1"
                     />
-                <!--<Grid Height="15">
-                    <Button Visibility="{Binding ProgressBarVisibility}" Content="Abbort" Margin="5 0 0 0" Command="{Binding CancelDownload}" FontSize="8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Grid>-->
+                    <Button 
+                        Visibility="{Binding ProgressBarVisibility}" 
+                        Content="Abbort" 
+                        Margin="5 0 0 0" 
+                        Command="{Binding CancelDownload}" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center"
+                        Background="{DynamicResource AccentColorBrush}"
+                        BorderThickness="0"
+                        Height="15"
+                        Foreground="White"
+                        FontWeight="Normal"
+                        />
             </StackPanel>
         </StatusBar>
 

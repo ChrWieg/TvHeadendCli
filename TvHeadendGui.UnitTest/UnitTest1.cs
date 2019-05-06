@@ -15,7 +15,7 @@ namespace TvHeadend.UnitTest
         [TestMethod]
         public void TestChannels()
         {
-            ITvHeadend tvHeadEnd = new TvHeadendLib.TvHeadend(Url,null);
+            ITvHeadend tvHeadEnd = new TvHeadendLib.TvHeadend(Url,true);
 
             Assert.IsTrue(tvHeadEnd.Channels.Count > 0);
 
@@ -27,7 +27,7 @@ namespace TvHeadend.UnitTest
         public void TestRecordings()
         {
 
-            ITvHeadend tvHeadEnd = new TvHeadendLib.TvHeadend(Url, null);
+            ITvHeadend tvHeadEnd = new TvHeadendLib.TvHeadend(Url, true);
 
             Assert.IsTrue(tvHeadEnd.Recordings.Count > 0);
 
@@ -39,7 +39,7 @@ namespace TvHeadend.UnitTest
         public void TestCreateRecording()
         {
 
-            ITvHeadend tvHeadEnd = new TvHeadendLib.TvHeadend(Url, null);
+            ITvHeadend tvHeadEnd = new TvHeadendLib.TvHeadend(Url, true);
             //http://pihole:9981/api/dvr/entry/create?conf={"start":1555587900,"stop":1555596000,"channel":"f1351106ed1b6872d85bbf2eab0e93c9","pri":2,"title":{"ger":"Die Prinzessin von Montpensier"},"subtitle":{"ger":"(2009)"}}
 
             if (!DateTime.TryParse("18.04.2019 13:37:30", out var start) || !DateTime.TryParse("18.04.2019 16:15:00", out var stop)) return;

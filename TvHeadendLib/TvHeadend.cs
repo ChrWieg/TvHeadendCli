@@ -8,6 +8,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using RestSharp;
 using RestSharp.Authenticators;
+using RestSharp.Extensions;
 using TvHeadendLib.Helper;
 using TvHeadendLib.Interfaces;
 using TvHeadendLib.Models;
@@ -53,23 +54,9 @@ namespace TvHeadendLib
             return result;
         }
 
-        /* ToDo: Startzeit Sekunden fehlten bei einem Recording, dadurch Remove fehlgeschlagen
-         *
-         */
-
         private RestClient _restClient;
         private Uri _tvHeadendUri;
-
-        /// <summary>
-        /// Instantiate and initialize TvHeadend.
-        /// </summary>
-        /// <param name="url">TvHeadend url and port: e.g. http://tvheadend:9981</param>
-        /// <param name="credential">If null the program tries to retrieve the credentials from the Windows credential store. You might be prompted for credentials if they are not stored yet.</param>
-        public TvHeadend(string url, Credential credential)
-        {
-            TvHeadendUri = new Uri(url);
-            InitializeRestClient(url, credential);
-        }
+        private Credential _credentials;
 
         /// <summary>
         /// Instantiate and initialize TvHeadend.
@@ -81,57 +68,38 @@ namespace TvHeadendLib
             TvHeadendUri = new Uri(url);
 
             if (useCredentialCache)
-                InitializeRestClient(url);
-            else
-                _restClient = new RestClient(url);
+                CredentialsFoundAtCredentialStore();
+
+            InitializeRestClient();
+        }
+
+        private void CredentialsFoundAtCredentialStore()
+        {
+            Credentials = CredentialHelper.GetStoredCredential(false);
         }
 
         /// <summary>
         /// Instantiate and initialize TvHeadend.
         /// Credentials from args will be used. If no credentials are provided, the application won't authenticate.
+        /// Used by Command Line Tool TvHeadendCli
         /// </summary>
         /// <param name="args"></param>
         public TvHeadend(string[] args)
         {
-            //extract and evaluate url and credentials
             var url = GetUrlFromArgs(args);
             TvHeadendUri = new Uri(url);
-
-            var credential = GetCredentialsFromArgs(args);
-
-            InitializeRestClient(url, credential);
+            Credentials = GetCredentialsFromArgs(args);
+            InitializeRestClient();
         }
 
-
-        /// <summary>
-        /// Use credentials from Windows credential store.
-        /// </summary>
-        /// <param name="url">TvHeadend url and port: e.g. http://tvheadend:9981</param>
-        private void InitializeRestClient(string url)
+        private void InitializeRestClient()
         {
-            var credentialFromStore = CredentialHelper.GetStoredCredential(false);
-            var httpBasicAuthenticator = new HttpBasicAuthenticator(credentialFromStore.UserName, credentialFromStore.Password);
-            _restClient = new RestClient(url) { Authenticator = httpBasicAuthenticator };
-            Credentials = new NetworkCredential(credentialFromStore.UserName, credentialFromStore.Password);
-        }
-
-        /// <summary>
-        /// Use given credentials or don't do authentication.
-        /// </summary>
-        /// <param name="url">TvHeadend url and port: e.g. http://tvheadend:9981</param>
-        /// <param name="credential">If null, no Authentication will be done.</param>
-        private void InitializeRestClient(string url, Credential credential)
-        {
-            if (credential == null)
-            {
-                _restClient = new RestClient(url);
+            _restClient = new RestClient(TvHeadendUri.AbsoluteUri);
+            if (Credentials == null)
                 return;
-            }
 
-            var httpBasicAuthenticator = new HttpBasicAuthenticator(credential.UserName, credential.Password);
-            _restClient = new RestClient(url) {Authenticator = httpBasicAuthenticator};
-
-            Credentials = new NetworkCredential(credential.UserName, credential.Password);
+            var httpBasicAuthenticator = new HttpBasicAuthenticator(Credentials.UserName, Credentials.Password);
+            _restClient.Authenticator = httpBasicAuthenticator;
         }
 
         public Uri TvHeadendUri
@@ -142,6 +110,17 @@ namespace TvHeadendLib
                 _tvHeadendUri = value;
                 if (_restClient != null)
                     _restClient.BaseUrl = _tvHeadendUri;
+            }
+        }
+
+        public Credential Credentials
+        {
+            get => _credentials;
+            set
+            {
+                _credentials = value;
+                if (_restClient != null && _credentials != null)
+                    _restClient.Authenticator = new HttpBasicAuthenticator(_credentials.UserName, _credentials.Password);
             }
         }
 
@@ -185,7 +164,7 @@ namespace TvHeadendLib
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new UnauthorizedAccessException($"The Server has denied the operation: {response.StatusCode}");
 
-            var result = response?.Data?.Entries?.Select(e =>
+            var result = response.Data?.Entries?.Select(e =>
                 new Recording
                 {
                     Uuid = e.Uuid,
@@ -238,6 +217,8 @@ namespace TvHeadendLib
             return result;
         }
 
+        //ToDo A: https://github.com/restsharp/RestSharp/wiki/ParameterTypes-for-RestRequest
+
         /// <summary>
         /// Needs at least start and stop time and the channel uuid.
         /// </summary>
@@ -256,13 +237,13 @@ namespace TvHeadendLib
             var recordingEntry = new RecordingEntryBase
             {
                 channel = recording.Channel,
-                comment = recording.Comment,
+                comment = recording.Comment.UrlEncode(),
                 pri = recording.Priority,
                 start = UnixTimeConverter.GetUnixTimeFromDateTime(recording.Start.ToUniversalTime()),
                 stop =  UnixTimeConverter.GetUnixTimeFromDateTime(recording.Stop.ToUniversalTime()),
-                title = new LanguageData { ger = recording.Title},
-                subtitle = new LanguageData { ger = recording.SubTitle},
-                description = new LanguageData { ger = recording.Description }
+                title = new LanguageData { ger = recording.Title.UrlEncode() },
+                subtitle = new LanguageData { ger = recording.SubTitle.UrlEncode() },
+                description = new LanguageData { ger = recording.Description.UrlEncode() }
             };
 
             //serialize new recording to json
@@ -360,7 +341,7 @@ namespace TvHeadendLib
             return TryGetChannelUuidFromName(result) ? result : null;
         }
 
-        public string RestClientIsOkay()
+        public string RestClientIsWorking()
         {
             if (_restClient == null)
                 return "Rest client not initialized yet";
@@ -390,8 +371,6 @@ namespace TvHeadendLib
 
             return "Rest Client: Okay";
         }
-
-        public ICredentials Credentials { get; private set; }
 
         /// <summary>
         /// Remove the given recording.

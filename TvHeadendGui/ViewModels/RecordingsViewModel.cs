@@ -37,12 +37,11 @@ namespace TvHeadendGui.ViewModels
 
         public RecordingsViewModel(IRegionManager regionManager, ITvHeadend tvHeadend) : base(regionManager, tvHeadend)
         {
-            Recordings = TvHeadend.Recordings;
+            OnReloadRecordings();
             DeleteSelectedRecording = new DelegateCommand(OnDeleteSelected).ObservesCanExecute(()=>CanDeleteRecording);
             ReloadRecordings = new DelegateCommand(OnReloadRecordings);
             DownloadSelectedRecording = new DelegateCommand(OnDownloadSelectedRecording).ObservesCanExecute(()=>CanDownloadRecording);
             CancelDownload = new DelegateCommand(OnDownloadCanceled);
-            StatusText = $"{Recordings.Count} Recordings.";
             ProgressBarVisibility = Visibility.Collapsed;
         }
 
@@ -54,6 +53,7 @@ namespace TvHeadendGui.ViewModels
 	    private void OnReloadRecordings()
 	    {
 	        Recordings = TvHeadend.Recordings;
+	        StatusText = $"{Recordings.Count} Recordings.";
         }
 
 	    public bool CanDownloadRecording => SelectedRecording?.Status == "Completed OK";
@@ -64,7 +64,8 @@ namespace TvHeadendGui.ViewModels
 
             var targetFilePath = Path.Combine(Settings.Default.VideoDownloadPath, targetFileName);
 
-            using (var webClient = new WebClient {Credentials = TvHeadend.Credentials})
+            var credentials = new NetworkCredential(TvHeadend.Credentials.UserName, TvHeadend.Credentials.Password);
+            using (var webClient = new WebClient {Credentials = credentials })
             {
                 webClient.DownloadFileCompleted += Completed;
                 webClient.DownloadProgressChanged += ProgressChanged;
@@ -112,13 +113,16 @@ namespace TvHeadendGui.ViewModels
 	        Process.Start(Settings.Default.VideoDownloadPath);
         }
 
-	    public bool CanDeleteRecording => SelectedRecording?.Status == "Scheduled for recording" || SelectedRecording?.Status == "Completed OK";
+	    public bool CanDeleteRecording => 
+	        SelectedRecording?.Status == "Scheduled for recording" ||
+	        SelectedRecording?.Status == "Completed OK" ||
+	        SelectedRecording?.Status == "Not enough disk space";
 	    private void OnDeleteSelected()
 	    {
             //ToDo: Use Mahapps Dialogs
             switch (SelectedRecording.Status)
             {
-                case "Completed": //ToDo: vervollständigen
+                case "Completed OK": //ToDo: complete list
                     if (MessageBox.Show($"Do you really want to delete the recorded file {SelectedRecording.Title} from the server?", "Are you sure?", MessageBoxButton.YesNoCancel) == MessageBoxResult.Yes)
                         TvHeadend.DeleteRecordedFile(SelectedRecording);
                     break;
@@ -126,7 +130,11 @@ namespace TvHeadendGui.ViewModels
                     if (MessageBox.Show($"Do you really want to delete the recording schedule {SelectedRecording.Title}?", "Are you sure?", MessageBoxButton.YesNoCancel) == MessageBoxResult.Yes)
                         TvHeadend.RemoveRecordingSchedule(SelectedRecording);
                     break;
+                case "Not enough disk space":
+                        TvHeadend.DeleteRecordedFile(SelectedRecording);
+                    break;
             }
+	        OnReloadRecordings();
         }
     }
 }

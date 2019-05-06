@@ -61,13 +61,25 @@ namespace TvHeadendGui.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\CWiegand\\Desktop\\Video\\Cut")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\CWiegand\\Desktop\\Video")]
         public string VideoDownloadPath {
             get {
                 return ((string)(this["VideoDownloadPath"]));
             }
             set {
                 this["VideoDownloadPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SaveCredentialsToWindowsCredentialStore {
+            get {
+                return ((bool)(this["SaveCredentialsToWindowsCredentialStore"]));
+            }
+            set {
+                this["SaveCredentialsToWindowsCredentialStore"] = value;
             }
         }
     }
