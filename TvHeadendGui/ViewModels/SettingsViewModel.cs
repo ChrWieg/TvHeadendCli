@@ -103,7 +103,7 @@ namespace TvHeadendGui.ViewModels
             //ToDo: use https
             var url = $"http://{ServerName}:{PortNumber}/";
 
-            TvHeadend.TvHeadendUri = new Uri(url);
+            TvHeadend.TvHeadendBaseUri = new Uri(url);
             TvHeadend.Credentials = new Credential {Password = Password, UserName = UserName};
 
             Settings.Default.Save();

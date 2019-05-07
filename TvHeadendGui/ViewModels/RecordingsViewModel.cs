@@ -59,7 +59,7 @@ namespace TvHeadendGui.ViewModels
 	    public bool CanDownloadRecording => SelectedRecording?.Status == "Completed OK";
         private async void OnDownloadSelectedRecording()
         {
-            var fileUrl = $"{TvHeadend.TvHeadendUri.AbsoluteUri}{SelectedRecording.Url}";
+            var fileUrl = $"{TvHeadend.TvHeadendBaseUri.AbsoluteUri}{SelectedRecording.Url}";
             var targetFileName = SelectedRecording.FileFullName.Substring(SelectedRecording.FileFullName.LastIndexOf("/")+1) ;
 
             var targetFilePath = Path.Combine(Settings.Default.VideoDownloadPath, targetFileName);

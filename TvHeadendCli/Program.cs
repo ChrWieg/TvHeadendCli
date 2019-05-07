@@ -9,7 +9,7 @@ namespace TvHeadendCli
     static class Program
     {
 
-        private static readonly string CreateParametersExample = @"-acreate -url""http://tvheadend:9981"" -un""{device_username}"" -up""{device_password}"" -c""{channel_name_external}"" -t""{maxlength(title,""200"")}"" -p""{production_year}"" -d""{description}"" -r""TV-Browser"" -s{start_unix} -e{end_unix}";
+        private static readonly string CreateParametersExample = @"-acreate -url""http://tvheadend:9981"" -un""{device_username}"" -up""{device_password}"" -c""{channel_name_external}"" -t""{maxlength(title,""200"")}"" -p""{isset({production_year},'')}"" -d""{description}"" -r""TV-Browser"" -s{start_unix} -e{end_unix}";
         private static readonly string RemoveParametersExample = @"-aremove -url""http://tvheadend:9981"" -un""{device_username}"" -up""{device_password}"" -c""{channel_name_external}"" -s{start_unix}";
         private static readonly string GetChannelNamesExample = @"-channels -url""http://tvheadend:9981"" -un""device_username"" -up""device_password""";
 
