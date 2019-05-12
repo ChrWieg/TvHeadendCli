@@ -13,3 +13,5 @@ But I prefere <a href="https://www.tvbrowser.org/">TV-Browser</a> for searching 
 <p>A tutorial for setting up the tool with TV-Browser you will find here: <a href="https://github.com/ChrWieg/TvHeadendCli/blob/master/Docs/HowToSetupTvBrowser.docx">docx</a> or here <a href="https://github.com/ChrWieg/TvHeadendCli/blob/master/Docs/HowToSetupTvBrowser.pdf">pdf</a>.</p>
 
 <p>I've added Binaries of TvHeadendGui. This is Alpha and only usable for testing yet. More about it will follow soon...</p>
+
+<p>May,12th 2019: TvHeadendGui Improved, Error Handling improved. Beta-Status! ToDo: Tutorial.</p>

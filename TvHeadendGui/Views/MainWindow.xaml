@@ -6,6 +6,7 @@
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         Title="{Binding Title}" MaxWidth="800" MaxHeight="600"
         xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:helper="clr-namespace:TvHeadendGui.Helper"
         SizeToContent="Width"
         WindowStartupLocation="CenterScreen"
          MinHeight="400"
@@ -15,20 +16,54 @@
     <interactivity:Interaction.Triggers>
         <interactivity:EventTrigger EventName="ContentRendered">
             <interactivity:EventTrigger.Actions>
-                <prism:InvokeCommandAction Command="{Binding ContentRendered}"></prism:InvokeCommandAction>
+                <prism:InvokeCommandAction Command="{Binding ContentRendered}" />
             </interactivity:EventTrigger.Actions>
         </interactivity:EventTrigger>
     </interactivity:Interaction.Triggers>
+    
+    <DockPanel LastChildFill="False">
+        <StatusBar DockPanel.Dock="Bottom" >
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" >
+                <Label Content="{Binding StatusText}" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center" 
+                       Foreground="White" />
+                <mah:MetroProgressBar 
+                    Value="{Binding ProgressValue}" 
+                    Margin="5 0 5 0" 
+                    Width="100" Height="10" 
+                    Visibility="{Binding ProgressBarVisibility}"
+                    Foreground="White"
+                    BorderBrush="White"
+                    BorderThickness="1"
+                />
+                <Button 
+                    Visibility="{Binding ProgressBarVisibility}" 
+                    Content="Abbort" 
+                    Margin="5 0 0 0" 
+                    Command="{Binding CancelDownload}" 
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center"
+                    Background="{DynamicResource AccentColorBrush}"
+                    BorderThickness="0"
+                    Height="15"
+                    Foreground="White"
+                    FontWeight="Normal"
+                />
+            </StackPanel>
+        </StatusBar>
 
-            <ContentControl Grid.Column="0" prism:RegionManager.RegionName="NavBarRegion" Margin="10"/>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <ContentControl Grid.Column="0" prism:RegionManager.RegionName="{x:Static helper:RegionNames.NavBarRegion}" Margin="10"/>
+            <ContentControl Grid.Column="1" prism:RegionManager.RegionName="{x:Static helper:RegionNames.ContentRegion}" Margin="10" />
+        </Grid>
 
-            <ContentControl Grid.Column="1" prism:RegionManager.RegionName="ContentRegion" Margin="10" />
+    </DockPanel>
 
-    </Grid>
 </mah:MetroWindow>
+

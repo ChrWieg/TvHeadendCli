@@ -27,10 +27,10 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\..\..\..\OhneInst\TvHeadend\</OutputPath>
+    <OutputPath>..\..\..\..\..\..\..\OhneInst\TvHeadendCli\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -91,4 +91,12 @@
     <Content Include="tvheadend.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>del "$(SolutionDir)\Binaries\$(TargetName).zip"
+"C:\Program Files\7-Zip\7z.exe" a "$(SolutionDir)\Binaries\$(TargetName).zip" "$(TargetDir)*"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

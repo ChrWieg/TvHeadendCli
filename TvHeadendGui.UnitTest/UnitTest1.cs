@@ -17,9 +17,9 @@ namespace TvHeadend.UnitTest
         {
             ITvHeadend tvHeadEnd = new TvHeadendLib.TvHeadend(Url,true);
 
-            Assert.IsTrue(tvHeadEnd.Channels.Count > 0);
+            Assert.IsTrue(tvHeadEnd.GetChannels().Count > 0);
 
-            foreach (var channel in tvHeadEnd.Channels)
+            foreach (var channel in tvHeadEnd.GetChannels())
                 Console.WriteLine(channel);
         }
 
@@ -29,9 +29,9 @@ namespace TvHeadend.UnitTest
 
             ITvHeadend tvHeadEnd = new TvHeadendLib.TvHeadend(Url, true);
 
-            Assert.IsTrue(tvHeadEnd.Recordings.Count > 0);
+            Assert.IsTrue(tvHeadEnd.GetRecordings().Count > 0);
 
-            foreach (var recording in tvHeadEnd.Recordings)
+            foreach (var recording in tvHeadEnd.GetRecordings())
                 Console.WriteLine(recording);
         }
 

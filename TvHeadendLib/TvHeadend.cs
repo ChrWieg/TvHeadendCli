@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Threading;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Extensions;
@@ -83,16 +84,6 @@ namespace TvHeadendLib
                     _restClient.Authenticator = new HttpBasicAuthenticator(_credentials.UserName, _credentials.Password);
             }
         }
-
-        /// <summary>
-        /// List of all enabled channels from the TvHeadend server.
-        /// </summary>
-        public ObservableCollection<Channel> Channels => GetChannels();
-
-        /// <summary>
-        /// List of all recordings from the TvHeadend server (scheduled, finished, failed...).
-        /// </summary>
-        public ObservableCollection<Recording> Recordings => GetRecordings();
 
         /// <summary>
         /// Creates a new recoding or schedule on the the TvHeadend server.
@@ -258,7 +249,7 @@ namespace TvHeadendLib
         public string RestClientIsWorking()
         {
             if (_restClient == null)
-                return "Rest client not initialized yet";
+                return "Not initialized yet";
 
             try
             {
@@ -270,20 +261,27 @@ namespace TvHeadendLib
                 };
 
                 var response = _restClient.Execute(request);
-                if (!response.IsSuccessful)
-                {
-                    return $"Rest Client Error: {response.StatusCode.ToString()}" ;
-                }
 
                 if (response.ErrorException != null)
-                    return $"Rest Client Error: {response.ErrorException.Message}" ;
+                {
+                    if (response.ErrorException.InnerException != null)
+                        return $"{response.ErrorException.InnerException.Message}";
+
+                    return $"{response.ErrorException.Message}";
+                }
+
+                if (!response.IsSuccessful)
+                {
+                    return $"{response.StatusCode.ToString()}" ;
+                }
+
             }
             catch (WebException ex)
             {
                 return ex.Message;
             }
 
-            return "Rest Client: Okay";
+            return "Okay";
         }
 
         /// <summary>
@@ -333,7 +331,10 @@ namespace TvHeadendLib
             Credentials = CredentialHelper.GetStoredCredential(false);
         }
 
-        private ObservableCollection<Channel> GetChannels()
+        /// <summary>
+        /// List of all enabled channels from the TvHeadend server.
+        /// </summary>
+        public ObservableCollection<Channel> GetChannels()
         {
             var command = "/api/channel/list";
             var request = new RestRequest(command, Method.GET)
@@ -344,15 +345,24 @@ namespace TvHeadendLib
 
             var response = _restClient.Execute<ChannelData>(request);
 
+            ////var cancellationTokenSource = new CancellationTokenSource();
+            //var task = _restClient.ExecuteTaskAsync<ChannelData>(request);
+            ////task.Wait(cancellationTokenSource.Token);
+
+            //var response = task.Result;
+
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new UnauthorizedAccessException($"The Server has denied the operation: {response.StatusCode}");
 
-            var list = response?.Data?.Entries.Select(e => new Channel {ChannelName = e.Val, ChannelKey = e.Key}).OrderBy(e=>e.ChannelName).ToList();
+            var list = response.Data?.Entries.Select(e => new Channel {ChannelName = e.Val, ChannelKey = e.Key}).OrderBy(e=>e.ChannelName).ToList();
 
             return list != null ? new ObservableCollection<Channel>(list) : new ObservableCollection<Channel>();
         }
 
-        private ObservableCollection<Recording> GetRecordings()
+        /// <summary>
+        /// List of all recordings from the TvHeadend server (scheduled, finished, failed...).
+        /// </summary>
+        public ObservableCollection<Recording> GetRecordings()
         {
             //List
             //http://pihole:9981/api/dvr/entry/grid
@@ -364,7 +374,14 @@ namespace TvHeadendLib
                 AlwaysMultipartFormData = true
             };
 
+            ////ToDo: Async
             var response = _restClient.Execute<RecordingData>(request);
+
+            //var cancellationTokenSource = new CancellationTokenSource();
+            //var task = _restClient.ExecuteTaskAsync<RecordingData>(request, cancellationTokenSource.Token);
+            ////task.Wait(cancellationTokenSource.Token);
+
+            //var response = task.Result;
 
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new UnauthorizedAccessException($"The Server has denied the operation: {response.StatusCode}");

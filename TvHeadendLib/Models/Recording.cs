@@ -13,6 +13,8 @@ namespace TvHeadendLib.Models
         public string FileFullName { get; set; }
         public string Url { get; set; }
 
+        public string StartStop => $"{Start:dd.MM. HH:mm} -> {Stop:dd.MM. HH:mm}";
+
         public override string ToString()
         {
             return $"{Start} -> {Stop}, {Title}, {ChannelName} (uuid: {Uuid})";

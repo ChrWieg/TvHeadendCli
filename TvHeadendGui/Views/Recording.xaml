@@ -1,0 +1,105 @@
+﻿<UserControl x:Class="TvHeadendGui.Views.Recording"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             prism:ViewModelLocator.AutoWireViewModel="True" 
+             Visibility="{Binding ControlVisibility}"
+             >
+    <Border BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="1" UseLayoutRounding="True" CornerRadius="2" Margin="2">
+        <StackPanel Orientation="Vertical" >
+            
+            <StackPanel Orientation="Horizontal">
+
+                <Label Content="{Binding Recording.StartStop}" />
+                <Label Content="{Binding Recording.ChannelName}" />
+                <Label Content="{Binding Recording.Title}" ToolTip="{Binding Recording.SubTitle}" FontWeight="Bold" />
+
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Status:" />
+                <Label Content="{Binding Recording.Status}" />
+            </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Background="{DynamicResource AccentColorBrush}" >
+
+                    <ToolBar ToolBarTray.IsLocked="True">
+
+                        <Button
+                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                        Width="24"
+                        Foreground="White"
+                            BorderBrush="White"
+                        ToolTip="Download Recording"
+                        Height="24"
+                        Margin="2"
+                        Command="{Binding DownloadSelectedRecording}"
+                    >
+                            <iconPacks:PackIconOcticons Kind="DesktopDownload" />
+                        </Button>
+
+                        <Button
+                        Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                        Width="24"
+                        Foreground="White"
+                        ToolTip="Delete Recording"
+                        Height="24"
+                        Margin="2"
+                        BorderBrush="White"
+                        Command="{Binding DeleteSelectedRecording}"
+                    >
+                            <iconPacks:PackIconModern Kind="Delete" />
+                        </Button>
+
+                        <Label Content="{Binding StatusText}" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" 
+                           Foreground="White" />
+
+                        <mah:MetroProgressBar 
+                        Value="{Binding ProgressValue}" 
+                        Width="100" Height="10" 
+                        Visibility="{Binding ProgressBarVisibility}"
+                        Foreground="White"
+                        BorderBrush="White"
+                        BorderThickness="1"
+                    />
+
+                        <Button 
+                        Visibility="{Binding ProgressBarVisibility}" 
+                        Content="Abbort" 
+                        Margin="5 0 0 0" 
+                        Command="{Binding CancelDownload}" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center"
+                        Background="{DynamicResource AccentColorBrush}"
+                        BorderThickness="0"
+                        Foreground="White"
+                        FontWeight="Normal"
+                    />
+
+                    </ToolBar>
+
+                </StackPanel>
+
+        </StackPanel>
+
+    </Border>
+
+</UserControl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

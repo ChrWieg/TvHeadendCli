@@ -62,7 +62,6 @@ namespace TvHeadendLib.Helper
 
         public static string GetCredentialStoreServiceName()
         {
-            //ToDo: testen
             var propertyName = "CredentialStoreServiceName";
             var providerName = "LocalFileSettingsProvider";
 

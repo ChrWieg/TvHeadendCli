@@ -5,8 +5,20 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              prism:ViewModelLocator.AutoWireViewModel="True"
              >
-    <DockPanel LastChildFill="True">
-        <ToolBar DockPanel.Dock="Top" >
+    <DockPanel LastChildFill="False">
+        <ToolBar DockPanel.Dock="Top" ToolBarTray.IsLocked="True" >
+
+            <Button
+                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                Width="24"
+                ToolTip="Reload Channels"
+                Height="24"
+                Command="{Binding ReloadChannels}"
+                Margin="2"
+            >
+                <iconPacks:PackIconFontAwesome Kind="SyncAltSolid" />
+            </Button>
+
             <Button
                 
                 Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
@@ -21,6 +33,7 @@
         <DataGrid ItemsSource="{Binding Channels}"
                   AutoGenerateColumns="False"
                   VerticalScrollBarVisibility="Auto"
+                  DockPanel.Dock="Top"
                   >
             <DataGrid.Columns>
             <!--<DataGridTextColumn Header="Key" Binding="{Binding Path=ChannelKey}"/>-->

@@ -112,7 +112,7 @@ namespace TvHeadendCli
         {
             Console.WriteLine("Channel names from TvHeadend:");
 
-            foreach (var tvHeadendChannel in tvHeadend.Channels)
+            foreach (var tvHeadendChannel in tvHeadend.GetChannels())
                 Console.WriteLine(tvHeadendChannel.ChannelName);
             return 0;
         }
@@ -132,9 +132,6 @@ namespace TvHeadendCli
             Console.WriteLine(GetChannelNamesExample);
             Console.WriteLine();
             Console.WriteLine("Use pipe: > Channels.txt to redirekt output into a file.");
-            //Console.WriteLine();
-            //Console.WriteLine("Press Enter to quit");
-            //Console.ReadLine();
         }
     }
 }

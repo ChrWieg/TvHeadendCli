@@ -19,12 +19,12 @@ namespace TvHeadendLib.Interfaces
         /// <summary>
         /// List of all enabled channels from the TvHeadend server.
         /// </summary>
-        ObservableCollection<Channel> Channels { get; }
+        ObservableCollection<Channel> GetChannels();
 
         /// <summary>
         /// List of all recordings from the TvHeadend server (scheduled, finished, failed...).
         /// </summary>
-        ObservableCollection<Recording> Recordings { get; }
+        ObservableCollection<Recording> GetRecordings();
 
         /// <summary>
         /// Creates a new recoding or schedule on the the TvHeadend server.

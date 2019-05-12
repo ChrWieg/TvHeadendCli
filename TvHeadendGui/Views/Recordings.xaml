@@ -3,15 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:helper="clr-namespace:TvHeadendGui.Helper"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
-    <DockPanel LastChildFill="False" >
+    <DockPanel LastChildFill="True" >
 
-        <ToolBar DockPanel.Dock="Top" >
+        <ToolBar DockPanel.Dock="Top" ToolBarTray.IsLocked="True" >
             <Button
                 Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
                 Width="24"
+                
                 ToolTip="Reload Recordings"
                 Height="24"
                 Command="{Binding ReloadRecordings}"
@@ -19,87 +20,213 @@
                 >
                 <iconPacks:PackIconFontAwesome Kind="SyncAltSolid" />
             </Button>
-            <Button
-                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                Width="24"
-                ToolTip="Download selected Recording"
-                Height="24"
-                Margin="2"
-                Command="{Binding DownloadSelectedRecording}"
-            >
-                <iconPacks:PackIconOcticons Kind="DesktopDownload" />
-            </Button>
-
-            <Button
-                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                Width="24"
-                ToolTip="Delete selected Recording"
-                Height="24"
-                Margin="2"
-                Command="{Binding DeleteSelectedRecording}"
-                >
-                <iconPacks:PackIconModern Kind="Delete" />
-            </Button>
-            <!--<Button 
-                Visibility="{Binding ProgressBarVisibility}" 
-                Content="Abbort" 
-                ToolTip="Abbort the running download"
-                Margin="2 0 0 0" 
-                Command="{Binding CancelDownload}" 
-                HorizontalAlignment="Center" 
-                VerticalAlignment="Center"/>-->
         </ToolBar>
 
-        <DataGrid DockPanel.Dock="Top"
-            ItemsSource="{Binding Recordings}"
-            SelectionMode="Single"
-            SelectedItem="{Binding SelectedRecording}"
-            AutoGenerateColumns="False"
-            >
+        <Label DockPanel.Dock="Top" Content="No Recordings found" Visibility="{Binding NoRecordingsFoundLabelVisibility}" />
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Start" Binding="{Binding Path=StartReal, StringFormat=\{0:dd.MM. HH:mm\}}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Stop" Binding="{Binding Path=StopReal, StringFormat=\{0:dd.MM. HH:mm\}}"  IsReadOnly="True"/>
-                <DataGridTextColumn Header="Channel" Binding="{Binding Path=ChannelName}"  IsReadOnly="True"/>
-                <DataGridTextColumn Header="Title" Binding="{Binding Path=Title}"  IsReadOnly="True"/>
-                <DataGridTextColumn Header="Status" Binding="{Binding Path=Status}"  IsReadOnly="True"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" DockPanel.Dock="Top" >
+            <ItemsControl 
+                prism:RegionManager.RegionName="{x:Static helper:RegionNames.RecordingRegion}" 
+                prism:RegionManager.RegionContext="{Binding Recordings}"
+                >
+        </ItemsControl>
 
-        <StatusBar DockPanel.Dock="Bottom" >
-            <StackPanel Orientation="Horizontal" >
-                <Label Content="{Binding StatusText}" 
-                       HorizontalAlignment="Center" 
-                       VerticalAlignment="Center" 
-                       Foreground="White" />
-                <mah:MetroProgressBar 
-                    Value="{Binding ProgressValue}" 
-                    Margin="5 0 5 0" 
-                    Width="100" Height="10" 
-                    Visibility="{Binding ProgressBarVisibility}"
-                    Foreground="White"
-                    BorderBrush="White"
-                    BorderThickness="1"
-                    />
-                    <Button 
-                        Visibility="{Binding ProgressBarVisibility}" 
-                        Content="Abbort" 
-                        Margin="5 0 0 0" 
-                        Command="{Binding CancelDownload}" 
-                        HorizontalAlignment="Center" 
-                        VerticalAlignment="Center"
-                        Background="{DynamicResource AccentColorBrush}"
-                        BorderThickness="0"
-                        Height="15"
-                        Foreground="White"
-                        FontWeight="Normal"
-                        />
-            </StackPanel>
-        </StatusBar>
+        </ScrollViewer>
 
     </DockPanel>
-
 </UserControl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

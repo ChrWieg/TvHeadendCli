@@ -20,31 +20,46 @@ namespace TvHeadendGui
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            var url = TryGetUrlFromSettings();
+            try
+            {
+                var url = TryGetUrlFromSettings();
+                var useCredentialCache = TvHeadendGui.Properties.Settings.Default.AuthenticationRequired && TvHeadendGui.Properties.Settings.Default.SaveCredentialsToWindowsCredentialStore;
 
-            containerRegistry.RegisterInstance(typeof(IRegionManager), new RegionManager());
-            containerRegistry.RegisterInstance(typeof(ITvHeadend), new TvHeadend(url,true));
+                containerRegistry.RegisterInstance(typeof(IRegionManager), new RegionManager());
 
-            containerRegistry.Register(typeof(object), typeof(NavBar), nameof(NavBar));
-            containerRegistry.Register(typeof(object), typeof(Channels), nameof(Channels));
-            containerRegistry.Register(typeof(object), typeof(Recordings), nameof(Recordings));
-            containerRegistry.Register(typeof(object), typeof(Settings), nameof(Settings));
+                containerRegistry.RegisterSingleton(typeof(ITvHeadend));
+                containerRegistry.RegisterInstance(typeof(ITvHeadend), new TvHeadend(url, useCredentialCache));
+
+                containerRegistry.Register(typeof(object), typeof(NavBar), nameof(NavBar));
+                containerRegistry.Register(typeof(object), typeof(Channels), nameof(Channels));
+                containerRegistry.Register(typeof(object), typeof(Recordings), nameof(Recordings));
+                containerRegistry.Register(typeof(object), typeof(Recording), nameof(Recording));
+                containerRegistry.Register(typeof(object), typeof(Settings), nameof(Settings));
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private string TryGetUrlFromSettings()
         {
-            //ToDo: implement and test creating Settings with Default values
-            return "http://pihole:9981";
+            if (TvHeadendGui.Properties.Settings.Default == null)
+                return "http://TvHeadend:9981";
 
-            //if (TvHeadendGui.Properties.Settings.Default != null)
-            //{
-                var serverName = TvHeadendGui.Properties.Settings.Default.ServerName;
-                var portNumber = TvHeadendGui.Properties.Settings.Default.PortNumber;
+            var serverName = TvHeadendGui.Properties.Settings.Default.ServerName;
+            var portNumber = TvHeadendGui.Properties.Settings.Default.PortNumber;
 
-                return $"http://{serverName}:{portNumber}";
-            //}
-
-            return "http://pihole:9981";
+            var protocol = TvHeadendGui.Properties.Settings.Default.UseTls ? "https://" : "http://";
+            return $"{protocol}{serverName}:{portNumber}/";
         }
+
+        //ToDo: https://github.com/stefaneyd/my-dot-net-prism-project/wiki
+        //protected override RegionAdapterMappings ConfigureRegionAdapterMappings()
+        //{
+        //    RegionAdapterMappings mappings = base.Configure.RegionAdapterMappings();
+        //    mappings.RegisterMappings(typeof(StackPanel), Containter.Resolve<StackPanelRegionAdapter>());
+        //    return mappings;
+        //}
     }
 }

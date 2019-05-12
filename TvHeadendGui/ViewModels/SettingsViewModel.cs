@@ -1,10 +1,15 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
+using System.Linq.Expressions;
 using System.Net;
 using Prism.Commands;
 using System.Windows;
+using System.Windows.Media;
+using Prism.Events;
 using Prism.Regions;
 using PropertyChanged;
+using TvHeadendGui.Events;
 using TvHeadendGui.Properties;
 using TvHeadendLib.Helper;
 using TvHeadendLib.Interfaces;
@@ -12,8 +17,19 @@ using TvHeadendLib.Models;
 
 namespace TvHeadendGui.ViewModels
 {
-    public class SettingsViewModel : ViewModelBase
+    public class SettingsViewModel : ViewModelBase, INavigationAware
     {
+        private string _statusText;
+        private bool _settingsChanged;
+        private const string TestOkayStatusText = "Rest client says:";
+        private const string SettingsSavedStatusText = "Settings have been saved. Run test to prove";
+        private const string SettingsResetStatusText = "Settings have been set to default values. Run test to prove.";
+
+        private const string StandardStatusText = "Adjust settings for accessing your TvHeadend Server here.";
+        private const string SettingsChangedStatusText = "Settings changed. Press the Save-button so save the new settings.";
+
+        private const string TestFailedStatusText = "Test failed:";
+
         public DelegateCommand SaveChanges { get; set; }
         public DelegateCommand ResetToDefault { get; set; }
         public DelegateCommand TestSettings { get; set; }
@@ -21,6 +37,7 @@ namespace TvHeadendGui.ViewModels
 
         public string ServerName { get; set; }
         public int PortNumber { get; set; }
+        public bool UseTls { get; set; }
 
         public bool AuthenticationRequired { get; set; }
         public bool SaveCredentials { get; set; }
@@ -33,23 +50,76 @@ namespace TvHeadendGui.ViewModels
 
         public string RemoveParameterString { get; set; }
 
-        public int ProgressValue { get; set; }
-        public Visibility ProgressBarVisibility { get; set; }
-        public string StatusText { get; set; }
+        [AlsoNotifyFor(nameof(StatusText))]
+        public SolidColorBrush StatusTextColor { get; set; }
+
+        [AlsoNotifyFor(nameof(OnSettingsChanged))]
+        public bool SettingsChanged
+        {
+            get => _settingsChanged;
+            set
+            {
+                SetProperty(ref _settingsChanged, value);
+                if (_settingsChanged)
+                    StatusText = SettingsChangedStatusText;
+            }
+        }
+
+        public string StatusText
+        {
+            get => _statusText;
+            set
+            {
+                SetProperty(ref _statusText,value);
+
+                if (_statusText == StandardStatusText || _statusText == SettingsChangedStatusText)
+                    StatusTextColor = new SolidColorBrush(Colors.Orange);
+                else if (_statusText.Contains(TestFailedStatusText))
+                    StatusTextColor = new SolidColorBrush(Colors.Red);
+                else
+                    StatusTextColor = new SolidColorBrush(Colors.Green);
+
+                EventAggregator.GetEvent<StatusChangedEvent>().Publish(new StatusInfo(_statusText));
+            }
+        }
 
         [AlsoNotifyFor(nameof(AuthenticationRequired))]
         public Visibility UnPwVisibility => AuthenticationRequired ? Visibility.Visible : Visibility.Collapsed;
 
-        public SettingsViewModel(IRegionManager regionManager, ITvHeadend tvHeadend) : base(regionManager, tvHeadend)
+        public SettingsViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, ITvHeadend tvHeadend) : base(regionManager, eventAggregator, tvHeadend)
         {
-            ProgressBarVisibility = Visibility.Collapsed;
-            SaveChanges = new DelegateCommand(OnSaveChanges);
+            SaveChanges = new DelegateCommand(OnSaveChanges).ObservesCanExecute( () => OnSettingsChanged);
             ResetToDefault = new DelegateCommand(OnResetToDefault);
             TestSettings = new DelegateCommand(OnTestSettings);
             CopyToClipBoard = new DelegateCommand<string>(Clipboard.SetText);
+            PropertyChanged += (sender, args) =>
+            {
+                if (args is PropertyChangedEventArgs propertyChangedEventArgs 
+                        && 
+                        (
+                            propertyChangedEventArgs.PropertyName == nameof(SettingsChanged) 
+                            || 
+                            propertyChangedEventArgs.PropertyName == nameof(OnSettingsChanged)
+                            ||
+                            propertyChangedEventArgs.PropertyName == nameof(StatusText)
+                            ||
+                            propertyChangedEventArgs.PropertyName == nameof(StatusTextColor)
+                            )
+                    )
+                    return;
 
+                SettingsChanged = true;
+            };
+        }
+
+        public bool OnSettingsChanged => SettingsChanged;
+
+        private void LoadSettingsData()
+        {
             ServerName = Settings.Default.ServerName;
             PortNumber = Settings.Default.PortNumber;
+            UseTls = Settings.Default.UseTls;
+            
             AuthenticationRequired = Settings.Default.AuthenticationRequired;
             SaveCredentials = Settings.Default.SaveCredentialsToWindowsCredentialStore;
 
@@ -65,12 +135,17 @@ namespace TvHeadendGui.ViewModels
             CreateParameterString = TvHeadend.GetCreateParameterString();
             RemoveParameterString = TvHeadend.GetRemoveParameterString();
 
-            StatusText = "Done.";
+            StatusText = StandardStatusText;
+            SettingsChanged = false;
         }
 
         private void OnTestSettings()
         {
-            StatusText = TvHeadend.RestClientIsWorking();
+            if (SettingsChanged)
+                OnSaveChanges();
+
+            var testResult = TvHeadend.RestClientIsWorking();
+            StatusText = $"{(testResult.ToLower().Contains("ok") ? TestOkayStatusText : TestFailedStatusText)} {testResult}";
         }
 
         private void OnResetToDefault()
@@ -79,6 +154,7 @@ namespace TvHeadendGui.ViewModels
             {
                 Settings.Default.PortNumber = 9981;
                 Settings.Default.ServerName = "TvHeadend";
+                Settings.Default.UseTls = false;
                 Settings.Default.AuthenticationRequired = true;
                 Settings.Default.SaveCredentialsToWindowsCredentialStore = true;
                 Settings.Default.VideoDownloadPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
@@ -87,12 +163,17 @@ namespace TvHeadendGui.ViewModels
                 ServerName = Settings.Default.ServerName;
                 PortNumber = Settings.Default.PortNumber;
             }
+
+            OnSaveChanges();
+            StatusText = SettingsResetStatusText;
+            SettingsChanged = false;
         }
 
         private void OnSaveChanges()
         {
             Settings.Default.PortNumber = PortNumber;
             Settings.Default.ServerName = ServerName;
+            Settings.Default.UseTls = UseTls;
             Settings.Default.AuthenticationRequired = AuthenticationRequired;
             Settings.Default.SaveCredentialsToWindowsCredentialStore = SaveCredentials;
             Settings.Default.VideoDownloadPath = VideoDownloadPath;
@@ -100,14 +181,34 @@ namespace TvHeadendGui.ViewModels
             if (AuthenticationRequired && SaveCredentials)
                 CredentialHelper.ResetCredential(new NetworkCredential(UserName, Password));
 
-            //ToDo: use https
-            var url = $"http://{ServerName}:{PortNumber}/";
+            var protocol = UseTls ? "https://" : "http://";
+            var url = $"{protocol}{ServerName}:{PortNumber}/";
 
             TvHeadend.TvHeadendBaseUri = new Uri(url);
             TvHeadend.Credentials = new Credential {Password = Password, UserName = UserName};
 
             Settings.Default.Save();
             Settings.Default.Reload();
+
+            CreateParameterString = TvHeadend.GetCreateParameterString();
+            RemoveParameterString = TvHeadend.GetRemoveParameterString();
+
+            StatusText = SettingsSavedStatusText;
+            SettingsChanged = false;
+        }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            LoadSettingsData();
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
         }
     }
 }

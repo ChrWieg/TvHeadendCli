@@ -30,7 +30,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\..\..\..\OhneInst\TvHeadend\</OutputPath>
+    <OutputPath>..\..\..\..\..\..\..\OhneInst\TvHeadendGui\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -64,13 +64,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Events\StatusChangedEvent.cs" />
+    <Compile Include="Events\StatusInfo.cs" />
     <Compile Include="Helper\PasswordHelper.cs" />
+    <Compile Include="Helper\RegionNames.cs" />
+    <Compile Include="Helper\StackPanelRegionAdapter.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="ViewModels\DependencyObjectBase.cs" />
     <Compile Include="ViewModels\NavBarViewModel.cs" />
     <Compile Include="ViewModels\RecordingsViewModel.cs" />
+    <Compile Include="ViewModels\RecordingViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\NavBar.xaml.cs">
       <DependentUpon>NavBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Recording.xaml.cs">
+      <DependentUpon>Recording.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Recordings.xaml.cs">
       <DependentUpon>Recordings.xaml</DependentUpon>
@@ -101,6 +111,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\NavBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Recording.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -162,4 +176,12 @@
     <Resource Include="tvheadend.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>del "$(SolutionDir)\Binaries\$(TargetName).zip"
+"C:\Program Files\7-Zip\7z.exe" a "$(SolutionDir)\Binaries\$(TargetName).zip" "$(TargetDir)*"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

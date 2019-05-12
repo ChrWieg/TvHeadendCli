@@ -82,5 +82,17 @@ namespace TvHeadendGui.Properties {
                 this["SaveCredentialsToWindowsCredentialStore"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseTls {
+            get {
+                return ((bool)(this["UseTls"]));
+            }
+            set {
+                this["UseTls"] = value;
+            }
+        }
     }
 }
