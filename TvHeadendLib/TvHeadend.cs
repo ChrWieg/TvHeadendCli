@@ -22,7 +22,7 @@ namespace TvHeadendLib
         //https://github.com/dave-p/TVH-API-docs/wiki
 
         private string _credentialPart = @"-un""{device_username}"" -up""{device_password}""";
-        private string _createPart = @"-c""{channel_name_external}"" -t""{maxlength(title,""200"")}"" -p""{isset({production_year},'')}"" -d""{description}"" -r""TV-Browser"" -s{start_unix} -e{end_unix}";
+        private string _createPart = @"-c""{channel_name_external}"" -t""{maxlength(title,""200"")}"" -p""{production_year}"" -d""{description}"" -r""TV-Browser"" -s{start_unix} -e{end_unix}";
         private string _removePart = @"-c""{channel_name_external}"" -s{start_unix}";
         private RestClient _restClient;
         private Uri _tvHeadendUri;

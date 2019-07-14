@@ -13,7 +13,33 @@ namespace TvHeadendLib.Models
         public string FileFullName { get; set; }
         public string Url { get; set; }
 
-        public string StartStop => $"{Start:dd.MM. HH:mm} -> {Stop:dd.MM. HH:mm}";
+        public string StartStop
+        {
+            get
+            {
+                var timespanUntilStart = StartReal.Subtract(DateTime.Now);
+                var timespanUntilStop = StopReal.Subtract(DateTime.Now);
+
+                var isNotRunningYet = timespanUntilStart.Milliseconds > 0;
+                var isFinished = timespanUntilStop.Milliseconds < 0;
+
+                var textPrefix = isNotRunningYet ? "Starting in " : isFinished ? "Finished since " : "Finished in ";
+                var timeSpanUsed = isNotRunningYet ? timespanUntilStart : timespanUntilStop;
+
+                var durationUntilStart = "";
+                if (timeSpanUsed > TimeSpan.FromDays(1))
+                    durationUntilStart = $" ({textPrefix}{Math.Abs(timeSpanUsed.Days)} days)";
+                else if (timeSpanUsed > TimeSpan.FromHours(1))
+                    durationUntilStart = $" ({textPrefix}{Math.Abs(timeSpanUsed.Hours)} hours)";
+                else
+                    durationUntilStart = $" ({textPrefix}{Math.Abs(timeSpanUsed.Minutes)} minutes)" ;
+
+                if (Start.Date == Stop.Date)
+                    return $"{Start:dd.MM. HH:mm} - {Stop:HH:mm}{durationUntilStart}";
+
+                return $"{Start:dd.MM. HH:mm} - {Stop:dd.MM. HH:mm}{durationUntilStart}";
+            }
+        }
 
         public override string ToString()
         {
