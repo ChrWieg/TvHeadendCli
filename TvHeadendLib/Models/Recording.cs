@@ -27,12 +27,14 @@ namespace TvHeadendLib.Models
                 var timeSpanUsed = isNotRunningYet ? timespanUntilStart : timespanUntilStop;
 
                 var durationUntilStart = "";
-                if (timeSpanUsed > TimeSpan.FromDays(1))
+                if (Math.Abs(timeSpanUsed.Days) > 0)
                     durationUntilStart = $" ({textPrefix}{Math.Abs(timeSpanUsed.Days)} days)";
-                else if (timeSpanUsed > TimeSpan.FromHours(1))
+                else if (Math.Abs(timeSpanUsed.Hours) > 0)
                     durationUntilStart = $" ({textPrefix}{Math.Abs(timeSpanUsed.Hours)} hours)";
-                else
+                else if (Math.Abs(timeSpanUsed.Minutes) > 0)
                     durationUntilStart = $" ({textPrefix}{Math.Abs(timeSpanUsed.Minutes)} minutes)" ;
+                else
+                    durationUntilStart = $" ({textPrefix}{Math.Abs(timeSpanUsed.Seconds)} seconds)";
 
                 if (Start.Date == Stop.Date)
                     return $"{Start:dd.MM. HH:mm} - {Stop:HH:mm}{durationUntilStart}";
