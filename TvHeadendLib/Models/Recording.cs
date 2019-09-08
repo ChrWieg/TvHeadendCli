@@ -23,7 +23,7 @@ namespace TvHeadendLib.Models
                 var isNotRunningYet = timespanUntilStart.Milliseconds > 0;
                 var isFinished = timespanUntilStop.Milliseconds < 0;
 
-                var textPrefix = isNotRunningYet ? "Starting in " : isFinished ? "Finished since " : "Finished in ";
+                var textPrefix = isNotRunningYet ? "Starting in about " : isFinished ? "Finished since about " : "Finished in about ";
                 var timeSpanUsed = isNotRunningYet ? timespanUntilStart : timespanUntilStop;
 
                 var durationUntilStart = "";

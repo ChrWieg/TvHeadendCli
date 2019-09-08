@@ -15,7 +15,7 @@ namespace TvHeadendGui.ViewModels
 	public class RecordingsViewModel : ViewModelBase, INavigationAware
     {
         [AlsoNotifyFor(nameof(NoRecordingsFoundLabelVisibility))]
-        public ObservableCollection<Recording> Recordings { get; set; }
+        public ObservableCollection<Recording> Recordings { get; set; } = new ObservableCollection<Recording>();
 
         public Visibility NoRecordingsFoundLabelVisibility => Recordings?.Count < 1 ? Visibility.Visible : Visibility.Collapsed;
 
@@ -30,6 +30,7 @@ namespace TvHeadendGui.ViewModels
 	    {
             try
             {
+                Recordings.Clear();
                 Recordings = TvHeadend.GetRecordings();
                 foreach (var recording in Recordings)
                 {

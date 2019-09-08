@@ -393,7 +393,9 @@ namespace TvHeadendLib
                     Channel = e.channel,
                     ChannelName = e.Channelname,
                     Title = e.title.ger,
+                    SubTitle = e.subtitle.ger.Trim(),
                     Comment = e.comment,
+                    Description = CleanDescription(e.description.ger),
                     Priority = e.pri,
                     Start = UnixTimeConverter.GetDateTimeFromUnixTime(e.start).ToLocalTime(),
                     Stop = UnixTimeConverter.GetDateTimeFromUnixTime(e.stop).ToLocalTime(),
@@ -501,6 +503,15 @@ namespace TvHeadendLib
             }
 
             return null;
+        }
+
+        private string CleanDescription(string description)
+        {
+            var result = description;
+
+            result = result.Replace("\r\n", " ");
+
+            return result;
         }
     }
 }
