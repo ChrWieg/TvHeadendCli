@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Policy;
+using System.Text.RegularExpressions;
 
 namespace TvHeadendLib.Models
 {
@@ -51,6 +52,13 @@ namespace TvHeadendLib.Models
         public string ToUserString()
         {
             return $"{Start:dd.MM. HH:mm} -> {Stop:dd.MM. HH:mm}, {Title}, {ChannelName}";
+        }
+
+        public string GetYearFromSubTitle()
+        {
+            var regex = new Regex("[0-9]{4}");
+            var result = regex.Match(SubTitle);
+            return result.Value;
         }
     }
 }

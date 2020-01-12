@@ -20,17 +20,34 @@ namespace TvHeadendGui.ViewModels
 	    public DelegateCommand ExportChannels { get; set; }
 	    public DelegateCommand ReloadChannels { get; set; }
 
+        public DelegateCommand MouseDoubleClickCommand { get; set; }
+
+        public Channel SelectedChannel { get; set; }
+
 	    public ChannelsViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, ITvHeadend tvHeadend) : base(regionManager, eventAggregator, tvHeadend)
 	    {
             ReloadChannels = new DelegateCommand(OnReloadChannels);
 	        ExportChannels = new DelegateCommand(OnExportChannels);
+            MouseDoubleClickCommand = new DelegateCommand(OnMouseDoubleClick);
 	    }
 
-	    private void OnReloadChannels()
+        private void OnMouseDoubleClick()
+        {
+            //ToDo: path to player and pattern as variable
+            //ToDo: authentication
+            var playerPath = @"C:\Program Files (x86)\VideoLAN\VLC\vlc.exe";
+            var uri = $"{TvHeadend.TvHeadendBaseUri}{SelectedChannel.PlayLink}";
+
+            var vlc = new Process {StartInfo = {FileName = playerPath, Arguments = uri}};
+            vlc.Start();
+        }
+
+        private void OnReloadChannels()
 	    {
 	        try
 	        {
-	            Channels = TvHeadend.GetChannels();
+                Channels?.Clear();
+                Channels = TvHeadend.GetChannels();
                 EventAggregator.GetEvent<StatusChangedEvent>().Publish(new StatusInfo($"{Channels.Count} Channels."));
 	        }
 	        catch (System.Exception ex)

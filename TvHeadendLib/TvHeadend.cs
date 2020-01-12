@@ -336,7 +336,7 @@ namespace TvHeadendLib
         /// </summary>
         public ObservableCollection<Channel> GetChannels()
         {
-            var command = "/api/channel/list";
+            var command = "/api/channel/grid?limit=100";
             var request = new RestRequest(command, Method.GET)
             {
                 RequestFormat = DataFormat.Json,
@@ -345,16 +345,10 @@ namespace TvHeadendLib
 
             var response = _restClient.Execute<ChannelData>(request);
 
-            ////var cancellationTokenSource = new CancellationTokenSource();
-            //var task = _restClient.ExecuteTaskAsync<ChannelData>(request);
-            ////task.Wait(cancellationTokenSource.Token);
-
-            //var response = task.Result;
-
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new UnauthorizedAccessException($"The Server has denied the operation: {response.StatusCode}");
 
-            var list = response.Data?.Entries.Select(e => new Channel {ChannelName = e.Val, ChannelKey = e.Key}).OrderBy(e=>e.ChannelName).ToList();
+            var list = response.Data?.Entries.Select(e => new Channel {ChannelName = e.Name, ChannelKey = e.Uuid, ChannelNumber = e.Number}).OrderBy(e=>e.ChannelName).ToList();
 
             return list != null ? new ObservableCollection<Channel>(list) : new ObservableCollection<Channel>();
         }

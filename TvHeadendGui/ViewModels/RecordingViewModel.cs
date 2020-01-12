@@ -9,6 +9,8 @@ using Prism.Common;
 using Prism.Events;
 using Prism.Regions;
 using PropertyChanged;
+using TvHeadendGui.Events;
+using TvHeadendLib.Helper;
 using TvHeadendLib.Interfaces;
 using Settings = TvHeadendGui.Properties.Settings;
 
@@ -66,7 +68,10 @@ namespace TvHeadendGui.ViewModels
         private async void OnDownload()
         {
             var fileUrl = $"{TvHeadend.TvHeadendBaseUri.AbsoluteUri}{Recording.Url}";
-            var targetFileName = Recording.FileFullName.Substring(Recording.FileFullName.LastIndexOf("/") + 1);
+            //var targetFileName = WinHelper.ValidateFileName(Recording.FileFullName.Substring(Recording.FileFullName.LastIndexOf("/") + 1));
+            var ext = Recording.FileFullName.Substring(Recording.FileFullName.LastIndexOf("."));
+            
+            var targetFileName = WinHelper.ValidateFileName($"{Recording.Title} ({Recording.GetYearFromSubTitle()}){ext}");
 
             var targetFilePath = Path.Combine(Settings.Default.VideoDownloadPath, targetFileName);
 
@@ -121,7 +126,8 @@ namespace TvHeadendGui.ViewModels
         public bool CanDelete =>
             Recording?.Status == "Scheduled for recording" ||
             Recording?.Status == "Completed OK" ||
-            Recording?.Status == "Not enough disk space";
+            Recording?.Status == "Not enough disk space" ||
+            Recording?.Status == "Time missed";
 
         private void OnDelete()
         {
@@ -134,15 +140,19 @@ namespace TvHeadendGui.ViewModels
                         TvHeadend.DeleteRecordedFile(Recording);
                     break;
                 case "Scheduled for recording":
-                    if (MessageBox.Show($"Do you really want to delete the recording schedule {Recording.Title}?", "Are you sure?", MessageBoxButton.YesNoCancel) == MessageBoxResult.Yes)
+                    if (MessageBox.Show($"Do you really want to delete the recording schedule {Recording.Title}?", "Are you sure?", MessageBoxButton.YesNoCancel) == MessageBoxResult.Yes) 
                         TvHeadend.RemoveRecordingSchedule(Recording);
                     break;
                 case "Not enough disk space":
                     TvHeadend.DeleteRecordedFile(Recording);
                     break;
+                case "Time missed":
+                    TvHeadend.DeleteRecordedFile(Recording);
+                    break;
             }
 
             Recording = null;
+            EventAggregator.GetEvent<RecordingChangedEvent>().Publish();
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)

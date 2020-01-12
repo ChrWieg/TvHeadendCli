@@ -64,8 +64,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Events\RecordingChangedEvent.cs" />
     <Compile Include="Events\StatusChangedEvent.cs" />
     <Compile Include="Events\StatusInfo.cs" />
+    <Compile Include="Helper\CommandEvents.cs" />
     <Compile Include="Helper\PasswordHelper.cs" />
     <Compile Include="Helper\RegionNames.cs" />
     <Compile Include="Helper\StackPanelRegionAdapter.cs" />

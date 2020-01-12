@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Helper\CredentialHelper.cs" />
     <Compile Include="Helper\UnixTimeConverter.cs" />
+    <Compile Include="Helper\Winhelper.cs" />
     <Compile Include="Interfaces\ITvHeadendObject.cs" />
     <Compile Include="Interfaces\ITvHeadend.cs" />
     <Compile Include="Models\ChannelEntry.cs" />

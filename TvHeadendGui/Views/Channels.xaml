@@ -3,9 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:helper="clr-namespace:TvHeadendGui.Helper"
              prism:ViewModelLocator.AutoWireViewModel="True"
              >
     <DockPanel LastChildFill="False">
+
         <ToolBar DockPanel.Dock="Top" ToolBarTray.IsLocked="True" >
 
             <Button
@@ -34,10 +36,19 @@
                   AutoGenerateColumns="False"
                   VerticalScrollBarVisibility="Auto"
                   DockPanel.Dock="Top"
+                  SelectedItem="{Binding SelectedChannel}"
+                  
                   >
+            <helper:CommandEvents.Commands>
+                <helper:EventCommandCollection>
+                    <helper:EventCommand CommandName="MouseDoubleClickCommand" EventName="MouseDoubleClick" />
+                </helper:EventCommandCollection>
+            </helper:CommandEvents.Commands>
+
             <DataGrid.Columns>
             <!--<DataGridTextColumn Header="Key" Binding="{Binding Path=ChannelKey}"/>-->
-            <DataGridTextColumn Header="Channel" Binding="{Binding Path=ChannelName}"/>
+            <DataGridTextColumn Header="Channel" Binding="{Binding Path=ChannelName}" IsReadOnly="True">
+            </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>

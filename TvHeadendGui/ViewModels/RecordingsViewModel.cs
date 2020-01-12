@@ -15,7 +15,7 @@ namespace TvHeadendGui.ViewModels
 	public class RecordingsViewModel : ViewModelBase, INavigationAware
     {
         [AlsoNotifyFor(nameof(NoRecordingsFoundLabelVisibility))]
-        public ObservableCollection<Recording> Recordings { get; set; } = new ObservableCollection<Recording>();
+        public ObservableCollection<Recording> Recordings { get; set; }
 
         public Visibility NoRecordingsFoundLabelVisibility => Recordings?.Count < 1 ? Visibility.Visible : Visibility.Collapsed;
 
@@ -23,15 +23,40 @@ namespace TvHeadendGui.ViewModels
 
 	    public RecordingsViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, ITvHeadend tvHeadend) : base(regionManager, eventAggregator, tvHeadend)
 	    {
-	        ReloadRecordings = new DelegateCommand(OnLoadRecordings);
+            Recordings = new ObservableCollection<Recording>();
+
+            ReloadRecordings = new DelegateCommand(OnLoadRecordings);
+
+            EventAggregator.GetEvent<RecordingChangedEvent>().Subscribe(OnLoadRecordings);
         }
 
 	    private void OnLoadRecordings()
 	    {
             try
             {
-                Recordings.Clear();
-                Recordings = TvHeadend.GetRecordings();
+                //if (Recordings == null)
+                //{
+                //    Recordings = TvHeadend.GetRecordings();
+                //    //var navigationParams = new NavigationParameters { { "DataContext", Recordings } };
+                //    //RegionManager.RequestNavigate(RegionNames.RecordingRegion, new Uri("Recording", UriKind.Relative), NavigationCompleted, navigationParams);
+
+                //}
+                //else
+                //{
+                    Recordings.Clear();
+                    Recordings.AddRange(TvHeadend.GetRecordings());
+
+                    //var navigationParams = new NavigationParameters { { "DataContext", Recordings } };
+                    //RegionManager.RequestNavigate(RegionNames.RecordingRegion, new Uri("Recording", UriKind.Relative), NavigationCompleted, navigationParams);
+
+
+
+                //if (RegionManager.Regions.ContainsRegionWithName(RegionNames.RecordingRegion))
+                //    {
+                //        var region = RegionManager.Regions[RegionNames.RecordingRegion];
+                //    }
+                //}
+
                 foreach (var recording in Recordings)
                 {
                     var navigationParams = new NavigationParameters { { "DataContext", recording } };
