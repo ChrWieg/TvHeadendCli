@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using Prism.Commands;
 using Prism.Events;
@@ -34,30 +35,15 @@ namespace TvHeadendGui.ViewModels
 	    {
             try
             {
-                //if (Recordings == null)
-                //{
-                //    Recordings = TvHeadend.GetRecordings();
-                //    //var navigationParams = new NavigationParameters { { "DataContext", Recordings } };
-                //    //RegionManager.RequestNavigate(RegionNames.RecordingRegion, new Uri("Recording", UriKind.Relative), NavigationCompleted, navigationParams);
+                for (int i = 0; i < Recordings.Count; i++) 
+                    Recordings.RemoveAt(i);
 
-                //}
-                //else
-                //{
-                    Recordings.Clear();
-                    Recordings.AddRange(TvHeadend.GetRecordings());
+                foreach (var recording in TvHeadend.GetRecordings()) 
+                    Recordings.Add(recording);
 
-                    //var navigationParams = new NavigationParameters { { "DataContext", Recordings } };
-                    //RegionManager.RequestNavigate(RegionNames.RecordingRegion, new Uri("Recording", UriKind.Relative), NavigationCompleted, navigationParams);
+                RegionManager.Regions[RegionNames.RecordingRegion].RemoveAll();
 
-
-
-                //if (RegionManager.Regions.ContainsRegionWithName(RegionNames.RecordingRegion))
-                //    {
-                //        var region = RegionManager.Regions[RegionNames.RecordingRegion];
-                //    }
-                //}
-
-                foreach (var recording in Recordings)
+                foreach (var recording in Recordings.OrderBy(r=>r.Start))
                 {
                     var navigationParams = new NavigationParameters { { "DataContext", recording } };
                     RegionManager.RequestNavigate(RegionNames.RecordingRegion, new Uri("Recording", UriKind.Relative), NavigationCompleted, navigationParams);
