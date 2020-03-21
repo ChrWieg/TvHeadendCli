@@ -38,10 +38,10 @@ namespace TvHeadendGui.ViewModels
                 for (int i = 0; i < Recordings.Count; i++) 
                     Recordings.RemoveAt(i);
 
+                RegionManager.Regions[RegionNames.RecordingRegion].RemoveAll();
+
                 foreach (var recording in TvHeadend.GetRecordings()) 
                     Recordings.Add(recording);
-
-                RegionManager.Regions[RegionNames.RecordingRegion].RemoveAll();
 
                 foreach (var recording in Recordings.OrderBy(r=>r.Start))
                 {

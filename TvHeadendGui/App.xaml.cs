@@ -53,13 +53,5 @@ namespace TvHeadendGui
             var protocol = TvHeadendGui.Properties.Settings.Default.UseTls ? "https://" : "http://";
             return $"{protocol}{serverName}:{portNumber}/";
         }
-
-        //ToDo: https://github.com/stefaneyd/my-dot-net-prism-project/wiki
-        //protected override RegionAdapterMappings ConfigureRegionAdapterMappings()
-        //{
-        //    RegionAdapterMappings mappings = base.Configure.RegionAdapterMappings();
-        //    mappings.RegisterMappings(typeof(StackPanel), Containter.Resolve<StackPanelRegionAdapter>());
-        //    return mappings;
-        //}
     }
 }

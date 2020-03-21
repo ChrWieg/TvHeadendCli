@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq.Expressions;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using Prism.Commands;
 using System.Windows;
 using System.Windows.Media;
@@ -91,7 +93,7 @@ namespace TvHeadendGui.ViewModels
             SaveChanges = new DelegateCommand(OnSaveChanges).ObservesCanExecute( () => OnSettingsChanged);
             ResetToDefault = new DelegateCommand(OnResetToDefault);
             TestSettings = new DelegateCommand(OnTestSettings);
-            CopyToClipBoard = new DelegateCommand<string>(Clipboard.SetText);
+            CopyToClipBoard = new DelegateCommand<string>(OnCopyToClipboard);
             PropertyChanged += (sender, args) =>
             {
                 if (args is PropertyChangedEventArgs propertyChangedEventArgs 
@@ -111,6 +113,49 @@ namespace TvHeadendGui.ViewModels
                 SettingsChanged = true;
             };
         }
+
+        private void OnCopyToClipboard(string content)
+        {
+            StatusText = StandardStatusText;
+
+            var thread = new Thread(() =>
+            {
+                for (var i = 0; i < 10; i++)
+                {
+                    try
+                    {
+                        Clipboard.SetText(content);
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            StatusText = "String copied to Clipboard";
+                        });
+
+                        return;
+                    }
+                    catch (Exception)
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            StatusText = "Clipboard is used by another Application, trying again..";
+                            StatusTextColor = new SolidColorBrush(Colors.Orange);
+                        });
+
+                        Thread.Sleep(100);
+                    }
+                }
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    StatusText = "Clipboard is used by another Application: sorry, I have given up. Please try again after a while.";
+                    StatusTextColor = new SolidColorBrush(Colors.Red);
+                });
+            });
+
+            thread.SetApartmentState(ApartmentState.STA);
+
+            thread.Start();
+        }
+
 
         public bool OnSettingsChanged => SettingsChanged;
 

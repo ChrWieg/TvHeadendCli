@@ -368,14 +368,7 @@ namespace TvHeadendLib
                 AlwaysMultipartFormData = true
             };
 
-            ////ToDo: Async
             var response = _restClient.Execute<RecordingData>(request);
-
-            //var cancellationTokenSource = new CancellationTokenSource();
-            //var task = _restClient.ExecuteTaskAsync<RecordingData>(request, cancellationTokenSource.Token);
-            ////task.Wait(cancellationTokenSource.Token);
-
-            //var response = task.Result;
 
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new UnauthorizedAccessException($"The Server has denied the operation: {response.StatusCode}");

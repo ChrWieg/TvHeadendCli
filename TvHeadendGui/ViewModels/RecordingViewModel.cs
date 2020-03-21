@@ -131,8 +131,8 @@ namespace TvHeadendGui.ViewModels
 
         private void OnDelete()
         {
-            //ToDo: Use Mahapps Dialogs
-            //ToDo: complete list
+            //ToDo B: Use Mahapps Dialogs
+            //ToDo B: complete list
             switch (Recording.Status)
             {
                 case "Completed OK":

@@ -8,13 +8,13 @@ namespace TvHeadendLib.Models
         public string Channel { get; set; }
 
         public string Title { get; set; }
-        public string SubTitle { get; set; }
-        public string Description { get; set; }
+        public string SubTitle { get; set; } = "";
+        public string Description { get; set; } = "";
 
         public DateTime Start { get; set; }
         public DateTime Stop { get; set; }
 
-        public string Comment { get; set; }
+        public string Comment { get; set; } = "";
 
         public int Priority { get; set; }
 

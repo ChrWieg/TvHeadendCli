@@ -19,8 +19,6 @@ namespace TvHeadendCli
         [STAThread]
         static int Main(string[] args)
         {
-            //ToDo: Test Error Handling
-
             try
             {
                 args = PrepareArgs(args);

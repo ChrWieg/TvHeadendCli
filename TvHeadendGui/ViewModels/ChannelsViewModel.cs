@@ -33,8 +33,7 @@ namespace TvHeadendGui.ViewModels
 
         private void OnMouseDoubleClick()
         {
-            //ToDo: path to player and pattern as variable
-            //ToDo: authentication
+            //ToDo C: path to player and pattern as variable - Problem: authentication
             var playerPath = @"C:\Program Files (x86)\VideoLAN\VLC\vlc.exe";
             var uri = $"{TvHeadend.TvHeadendBaseUri}{SelectedChannel.PlayLink}";
 
@@ -62,7 +61,7 @@ namespace TvHeadendGui.ViewModels
 
 	        if (executablePath == null) return;
 
-            //ToDo: file picker
+            //ToDo B: file picker
 	        var fileFullName = Path.Combine(executablePath, "Channels.txt");
 	        //var fileDialog = new OpenFileDialog {Filter = "(*.txt)|*.txt", FileName = "Channels.txt"};
 	        //var result = fileDialog.ShowDialog();
