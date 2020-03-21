@@ -63,7 +63,7 @@
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Label Grid.Column="0" Grid.Row="0" Content="Server Name" ToolTip="Host Name of your TvHeadend Server (without http://)" />
+            <Label Grid.Column="0" Grid.Row="0" Content="Server Name Or IP" ToolTip="Host Name or ip address of your TvHeadend Server (without http://)" />
             <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding ServerName,UpdateSourceTrigger=PropertyChanged}" ToolTip="Host Name of your TvHeadend Server (without http://)" />
 
             <Label Grid.Column="0" Grid.Row="1" Content="Port Number" ToolTip="Default Port is 9981" />
