@@ -18,5 +18,5 @@ But I prefere <a href="https://www.tvbrowser.org/">TV-Browser</a> for searching 
 
 <p>March, 21st 2020: Stability improved, parameters SubTitle, Description and Comment are optinal now. But it makes sense to use all parameters.</p>
 
-<p>You will find the Binaries <a href="https://github.com/ChrWieg/TvHeadendCli/tree/master/Binaries">here</a>It is recommended to use TvHeadendGui.exe and to copy the recording parameters generated there. None of the tools needs to be installed, they work by copy&paste in any folder with normal user rights. .Net Framework 4.7.2 or higher is required.</p>
+<p>You will find the Binaries <a href="https://github.com/ChrWieg/TvHeadendCli/tree/master/Binaries">here</a> It is recommended to use TvHeadendGui.exe to create the parameters for Aufnahmesteuerung. None of the tools needs to be installed, they work by copy&paste in any folder with normal user rights. .Net Framework 4.7.2 or higher is required.</p>
 
