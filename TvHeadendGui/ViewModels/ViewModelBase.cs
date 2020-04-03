@@ -1,7 +1,6 @@
 ﻿using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
-using TvHeadendLib;
 using TvHeadendLib.Interfaces;
 
 namespace TvHeadendGui.ViewModels

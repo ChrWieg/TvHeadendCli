@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TvHeadendLib.Models
+﻿namespace TvHeadendLib.Models
 {
     public class Channel
     {

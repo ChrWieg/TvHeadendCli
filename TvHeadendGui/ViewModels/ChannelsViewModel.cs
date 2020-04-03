@@ -7,7 +7,6 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using TvHeadendGui.Events;
-using TvHeadendGui.Properties;
 using TvHeadendLib.Interfaces;
 using TvHeadendLib.Models;
 

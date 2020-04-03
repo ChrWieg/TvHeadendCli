@@ -19,9 +19,12 @@ namespace TvHeadendCli
         [STAThread]
         static int Main(string[] args)
         {
-            try
+           var currentAction = "";
+           try
             {
+                currentAction = "PrepareArgs";
                 args = PrepareArgs(args);
+                var joinedArgs = string.Join(" ", args);
 
                 //first parameter is -help: reply help info then return
                 if (args[0].ToLower().StartsWith("-help"))
@@ -38,13 +41,18 @@ namespace TvHeadendCli
                     return -1;
                 }
 
+                currentAction = "new TvHeadend(args)";
                 ITvHeadend tvHeadend = new TvHeadend(args);
 
                 //Action -channels
                 if (args[0].ToLower().StartsWith("-channels"))
-                    return GetChannels(tvHeadend);
+                {
+                    currentAction = "GetChannels(tvHeadend, joinedArgs.ToLower().Contains(\"-num\"))";
+                    return GetChannels(tvHeadend, joinedArgs.ToLower().Contains("-num"));
+                }
 
                 //Try to get recording info from args
+                currentAction = "tvHeadend.GetRecordingFromArgs(args)";
                 var recording = tvHeadend.GetRecordingFromArgs(args); // , 1
                 if (recording == null)
                 {
@@ -54,14 +62,20 @@ namespace TvHeadendCli
 
                 //Recording Actions
                 if (args[0].ToLower().StartsWith("-acreate"))
+                {
+                    currentAction = "CreateRecording(tvHeadend, recording)";
                     return CreateRecording(tvHeadend, recording);
+                }
 
                 if (args[0].ToLower().StartsWith("-aremove"))
+                {
+                    currentAction = "RemoveRecording(tvHeadend, recording)";
                     return RemoveRecording(tvHeadend, recording);
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error {currentAction}: {ex.Message}");
                 return -1;
             }
 
@@ -106,12 +120,26 @@ namespace TvHeadendCli
             return -1;
         }
 
-        private static int GetChannels(ITvHeadend tvHeadend)
+        private static int GetChannels(ITvHeadend tvHeadend, bool withNumbers)
         {
             Console.WriteLine("Channel names from TvHeadend:");
+            var i = 0;
 
             foreach (var tvHeadendChannel in tvHeadend.GetChannels())
-                Console.WriteLine(tvHeadendChannel.ChannelName);
+            {
+                i++;
+                if (withNumbers)
+                {
+                    Console.WriteLine($"{i:000} {tvHeadendChannel.ChannelName}");
+                }
+                else
+                {
+                    Console.WriteLine(tvHeadendChannel.ChannelName);
+                }
+            }
+            Console.WriteLine();
+            Console.WriteLine($"{i} Channels found!");
+
             return 0;
         }
 

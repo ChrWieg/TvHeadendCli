@@ -25,7 +25,7 @@ namespace TvHeadendGui.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("pihole")]
+        [global::System.Configuration.DefaultSettingValueAttribute("TvHeadend")]
         public string ServerName {
             get {
                 return ((string)(this["ServerName"]));

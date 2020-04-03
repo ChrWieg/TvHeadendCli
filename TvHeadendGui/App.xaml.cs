@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using Prism.Ioc;
 using Prism.Regions;
 using TvHeadendGui.Views;
@@ -47,12 +48,21 @@ namespace TvHeadendGui
             if (TvHeadendGui.Properties.Settings.Default == null)
                 return "http://TvHeadend:9981";
 
-            var serverName = TvHeadendGui.Properties.Settings.Default.ServerName;
-            var serverPath = TvHeadendGui.Properties.Settings.Default.ServerPath;
-            var portNumber = TvHeadendGui.Properties.Settings.Default.PortNumber;
+            var uriBuilder = new UriBuilder
+            {
+                Host = TvHeadendGui.Properties.Settings.Default.ServerName,
+                Path = TvHeadendGui.Properties.Settings.Default.ServerPath,
+                Port = TvHeadendGui.Properties.Settings.Default.PortNumber,
+                Scheme = TvHeadendGui.Properties.Settings.Default.UseTls ? "https" : "http"
+            };
 
-            var protocol = TvHeadendGui.Properties.Settings.Default.UseTls ? "https://" : "http://";
-            return $"{protocol}{serverName}{serverPath}:{portNumber}/";
+            return uriBuilder.Uri.ToString();
+            //var serverName = TvHeadendGui.Properties.Settings.Default.ServerName;
+            //var serverPath = TvHeadendGui.Properties.Settings.Default.ServerPath;
+            //var portNumber = TvHeadendGui.Properties.Settings.Default.PortNumber;
+
+            //var protocol = TvHeadendGui.Properties.Settings.Default.UseTls ? "https://" : "http://";
+            //return $"{protocol}{serverName}:{portNumber}{serverPath}";
         }
     }
 }

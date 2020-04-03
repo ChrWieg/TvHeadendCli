@@ -1,10 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq.Expressions;
 using System.Net;
 using System.Threading;
-using System.Threading.Tasks;
 using Prism.Commands;
 using System.Windows;
 using System.Windows.Media;
@@ -12,6 +10,7 @@ using Prism.Events;
 using Prism.Regions;
 using PropertyChanged;
 using TvHeadendGui.Events;
+using TvHeadendGui.Helper;
 using TvHeadendGui.Properties;
 using TvHeadendLib.Helper;
 using TvHeadendLib.Interfaces;
@@ -23,7 +22,7 @@ namespace TvHeadendGui.ViewModels
     {
         private string _statusText;
         private bool _settingsChanged;
-        private const string TestOkayStatusText = "Rest client says:";
+        private const string TestOkayStatusText = "Server says:";
         private const string SettingsSavedStatusText = "Settings have been saved. Run test to prove";
         private const string SettingsResetStatusText = "Settings have been set to default values. Run test to prove.";
 
@@ -52,6 +51,7 @@ namespace TvHeadendGui.ViewModels
         public string CreateParameterString { get; set; }
 
         public string RemoveParameterString { get; set; }
+        public string DotNetVersion { get; set; }
 
         [AlsoNotifyFor(nameof(StatusText))]
         public SolidColorBrush StatusTextColor { get; set; }
@@ -113,6 +113,7 @@ namespace TvHeadendGui.ViewModels
 
                 SettingsChanged = true;
             };
+            DotNetVersion = GetDotNetVersion.Get45PlusFromRegistry();
         }
 
         private void OnCopyToClipboard(string content)
@@ -162,6 +163,7 @@ namespace TvHeadendGui.ViewModels
 
         private void LoadSettingsData()
         {
+
             ServerName = Settings.Default.ServerName;
             ServerPath = Settings.Default.ServerPath;
             PortNumber = Settings.Default.PortNumber;
@@ -192,7 +194,7 @@ namespace TvHeadendGui.ViewModels
                 OnSaveChanges();
 
             var testResult = TvHeadend.RestClientIsWorking();
-            StatusText = $"{(testResult.ToLower().Contains("ok") ? TestOkayStatusText : TestFailedStatusText)} {testResult}";
+            StatusText = $"{(testResult.Contains("Okay") ? TestOkayStatusText : TestFailedStatusText)} {testResult}";
         }
 
         private void OnResetToDefault()
@@ -201,6 +203,7 @@ namespace TvHeadendGui.ViewModels
             {
                 Settings.Default.PortNumber = 9981;
                 Settings.Default.ServerName = "TvHeadend";
+                Settings.Default.ServerPath = "/";
                 Settings.Default.UseTls = false;
                 Settings.Default.AuthenticationRequired = true;
                 Settings.Default.SaveCredentialsToWindowsCredentialStore = true;
@@ -230,10 +233,15 @@ namespace TvHeadendGui.ViewModels
             if (AuthenticationRequired && SaveCredentials)
                 CredentialHelper.ResetCredential(new NetworkCredential(UserName, Password));
 
-            var protocol = UseTls ? "https://" : "http://";
-            var url = $"{protocol}{ServerName}:{PortNumber}{ServerPath}";
+            var uriBuilder = new UriBuilder
+            {
+                Host = ServerName, 
+                Path = ServerPath, 
+                Port = PortNumber, 
+                Scheme = UseTls ? "https" : "http"
+            };
 
-            TvHeadend.TvHeadendBaseUri = new Uri(url);
+            TvHeadend.TvHeadendBaseUri = uriBuilder.Uri;
             TvHeadend.Credentials = new Credential {Password = Password, UserName = UserName};
 
             Settings.Default.Save();

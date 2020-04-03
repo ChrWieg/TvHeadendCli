@@ -6,7 +6,6 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using System.Text;
-using System.Threading;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Extensions;
@@ -95,7 +94,6 @@ namespace TvHeadendLib
             //ToDo: implement post https://github.com/restsharp/RestSharp/wiki/ParameterTypes-for-RestRequest
 
             //Create
-            //http://pihole:9981/api/dvr/entry/create?conf={"start":1555587900,"stop":1555596000,"channel":"f1351106ed1b6872d85bbf2eab0e93c9","pri":2,"title":{"ger":"Die Prinzessin von Montpensier"},"subtitle":{"ger":"(2009)"}}
 
             //if the recording exists return existing
             if (TryGetRecordingUuidFromChannelAndStart(recording))
@@ -155,7 +153,6 @@ namespace TvHeadendLib
                 throw new Exception("Unable to get Recording-Uuid from channel and start time.", null);
 
             //Remove scheduled recording
-            //http://pihole:9981/api/dvr/entry/cancel?uuid=c6c86a720748ef3ea880c706a22cd776
             var removeRecordingCommand = "/api/dvr/entry/cancel?uuid=" + recording.Uuid;
 
             var request = new RestRequest(removeRecordingCommand, Method.GET)
@@ -183,7 +180,6 @@ namespace TvHeadendLib
                 throw new Exception("Unable to get Recording-Uuid from channel and start time.", null);
 
             //Remove scheduled recording
-            //http://pihole:9981/api/dvr/entry/cancel?uuid=c6c86a720748ef3ea880c706a22cd776
             var removeRecordingCommand = "/api/dvr/entry/remove?uuid=" + recording.Uuid;
 
             var request = new RestRequest(removeRecordingCommand, Method.GET)
@@ -336,7 +332,7 @@ namespace TvHeadendLib
         /// </summary>
         public ObservableCollection<Channel> GetChannels()
         {
-            var command = "/api/channel/grid?limit=100";
+            var command = "/api/channel/grid?limit=1000";
             var request = new RestRequest(command, Method.GET)
             {
                 RequestFormat = DataFormat.Json,
@@ -359,7 +355,6 @@ namespace TvHeadendLib
         public ObservableCollection<Recording> GetRecordings()
         {
             //List
-            //http://pihole:9981/api/dvr/entry/grid
 
             var getRecordingsCommand = "/api/dvr/entry/grid"; //grid_upcoming, grid_finished, grid_failed, grid_removed, 
             var request = new RestRequest(getRecordingsCommand, Method.GET)

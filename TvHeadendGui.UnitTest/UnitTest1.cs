@@ -40,7 +40,6 @@ namespace TvHeadend.UnitTest
         {
 
             ITvHeadend tvHeadEnd = new TvHeadendLib.TvHeadend(Url, true);
-            //http://pihole:9981/api/dvr/entry/create?conf={"start":1555587900,"stop":1555596000,"channel":"f1351106ed1b6872d85bbf2eab0e93c9","pri":2,"title":{"ger":"Die Prinzessin von Montpensier"},"subtitle":{"ger":"(2009)"}}
 
             if (!DateTime.TryParse("18.04.2019 13:37:30", out var start) || !DateTime.TryParse("18.04.2019 16:15:00", out var stop)) return;
 
@@ -70,7 +69,6 @@ namespace TvHeadend.UnitTest
         {
 
             //Create
-            //http://pihole:9981/api/dvr/entry/create?conf={"start":1555587900,"stop":1555596000,"channel":"f1351106ed1b6872d85bbf2eab0e93c9","pri":2,"title":{"ger":"Die Prinzessin von Montpensier"},"subtitle":{"ger":"(2009)"}}
             /*
              *
             {"Channel":"f1351106ed1b6872d85bbf2eab0e93c9","Comment":"Created by Tv-Browser","Pri":2,"Start":1555594650,"Stop":1555604100,"SubTitle":{"Ger":"(2009)"},"Title":{"Ger":"Die Prinzessin von Montpensier"}}

@@ -60,8 +60,9 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition ></RowDefinition>
+                <RowDefinition ></RowDefinition>
             </Grid.RowDefinitions>
 
             <Label Grid.Column="0" Grid.Row="0" Content="Server Name Or IP" ToolTip="Host Name or ip address of your TvHeadend Server (without http://)" />
@@ -144,6 +145,10 @@
                      TextWrapping="Wrap"
                      MaxLines="4"
                      IsReadOnly="True"/>
+
+            <Label Grid.Column="0" Grid.Row="12" Content=".Net-Version" />
+            <Label Grid.Column="1" Grid.Row="12" Content="{Binding DotNetVersion}" />
+
         </Grid>
 
     </DockPanel>

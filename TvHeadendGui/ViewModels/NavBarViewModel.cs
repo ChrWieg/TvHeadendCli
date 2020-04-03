@@ -3,7 +3,6 @@ using Prism.Events;
 using Prism.Regions;
 using TvHeadendGui.Helper;
 using TvHeadendGui.Views;
-using TvHeadendLib;
 using TvHeadendLib.Interfaces;
 
 namespace TvHeadendGui.ViewModels
