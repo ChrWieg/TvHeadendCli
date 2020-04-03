@@ -48,10 +48,11 @@ namespace TvHeadendGui
                 return "http://TvHeadend:9981";
 
             var serverName = TvHeadendGui.Properties.Settings.Default.ServerName;
+            var serverPath = TvHeadendGui.Properties.Settings.Default.ServerPath;
             var portNumber = TvHeadendGui.Properties.Settings.Default.PortNumber;
 
             var protocol = TvHeadendGui.Properties.Settings.Default.UseTls ? "https://" : "http://";
-            return $"{protocol}{serverName}:{portNumber}/";
+            return $"{protocol}{serverName}{serverPath}:{portNumber}/";
         }
     }
 }

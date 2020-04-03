@@ -59,6 +59,7 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
@@ -66,42 +67,45 @@
             <Label Grid.Column="0" Grid.Row="0" Content="Server Name Or IP" ToolTip="Host Name or ip address of your TvHeadend Server (without http://)" />
             <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding ServerName,UpdateSourceTrigger=PropertyChanged}" ToolTip="Host Name of your TvHeadend Server (without http://)" />
 
-            <Label Grid.Column="0" Grid.Row="1" Content="Port Number" ToolTip="Default Port is 9981" />
-            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding PortNumber,UpdateSourceTrigger=PropertyChanged}" ToolTip="Default Port is 9981" />
+            <Label Grid.Column="0" Grid.Row="1" Content="Server Path" ToolTip="Adjust this if your server root is different to '/'" />
+            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding ServerPath,UpdateSourceTrigger=PropertyChanged}" ToolTip="Adjust this if your server root is different to '/'" />
 
-            <Label Grid.Column="0" Grid.Row="2" Content="Use TLS (https)" ToolTip="Check this if your TvHeadend Server provides TLS" />
-            <CheckBox Grid.Column="1" Grid.Row="2" IsChecked="{Binding UseTls,UpdateSourceTrigger=PropertyChanged}" ToolTip="Check this if your TvHeadend Server provides TLS" />
+            <Label Grid.Column="0" Grid.Row="2" Content="Port Number" ToolTip="Default Port is 9981" />
+            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding PortNumber,UpdateSourceTrigger=PropertyChanged}" ToolTip="Default Port is 9981" />
 
-            <Label Grid.Column="0" Grid.Row="3" Content="Authentication" ToolTip="Check this if your TvHeadend Server requires Authentication" />
-            <CheckBox Grid.Column="1" Grid.Row="3" IsChecked="{Binding AuthenticationRequired,UpdateSourceTrigger=PropertyChanged}" ToolTip="Check this if your TvHeadend Server requires Authentication" />
+            <Label Grid.Column="0" Grid.Row="3" Content="Use TLS (https)" ToolTip="Check this if your TvHeadend Server provides TLS" />
+            <CheckBox Grid.Column="1" Grid.Row="3" IsChecked="{Binding UseTls,UpdateSourceTrigger=PropertyChanged}" ToolTip="Check this if your TvHeadend Server provides TLS" />
 
-            <Label Grid.Column="0" Grid.Row="4" Content="Save Credentials" ToolTip="Credentials will be saved to Windows Credential Store" />
-            <CheckBox Grid.Column="1" Grid.Row="4" IsChecked="{Binding SaveCredentials,UpdateSourceTrigger=PropertyChanged}" ToolTip="Credentials will be saved to Windows Credential Store" />
+            <Label Grid.Column="0" Grid.Row="4" Content="Authentication" ToolTip="Check this if your TvHeadend Server requires Authentication" />
+            <CheckBox Grid.Column="1" Grid.Row="4" IsChecked="{Binding AuthenticationRequired,UpdateSourceTrigger=PropertyChanged}" ToolTip="Check this if your TvHeadend Server requires Authentication" />
 
-            <Label Grid.Column="0" Grid.Row="5" Content="User Name" Visibility="{Binding UnPwVisibility}" />
-            <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding UserName,UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding UnPwVisibility}" />
+            <Label Grid.Column="0" Grid.Row="5" Content="Save Credentials" ToolTip="Credentials will be saved to Windows Credential Store" />
+            <CheckBox Grid.Column="1" Grid.Row="5" IsChecked="{Binding SaveCredentials,UpdateSourceTrigger=PropertyChanged}" ToolTip="Credentials will be saved to Windows Credential Store" />
 
-            <Label Grid.Column="0" Grid.Row="6" Content="Password" Visibility="{Binding UnPwVisibility}" />
+            <Label Grid.Column="0" Grid.Row="6" Content="User Name" Visibility="{Binding UnPwVisibility}" />
+            <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding UserName,UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding UnPwVisibility}" />
+
+            <Label Grid.Column="0" Grid.Row="7" Content="Password" Visibility="{Binding UnPwVisibility}" />
             <PasswordBox 
                 Grid.Column="1" 
-                Grid.Row="6" 
+                Grid.Row="7" 
                 Visibility="{Binding UnPwVisibility}" 
                 helper:PasswordHelper.Attach="True" 
                 helper:PasswordHelper.Password="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
             </PasswordBox>
 
-            <Label Grid.Column="0" Grid.Row="7" Content="Video Download Path" />
-            <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding VideoDownloadPath,UpdateSourceTrigger=PropertyChanged}" />
+            <Label Grid.Column="0" Grid.Row="8" Content="Video Download Path" />
+            <TextBox Grid.Column="1" Grid.Row="8" Text="{Binding VideoDownloadPath,UpdateSourceTrigger=PropertyChanged}" />
 
-            <Label Grid.Column="0" Grid.Row="8" 
+            <Label Grid.Column="0" Grid.Row="9" 
                    Content="Aufnahmesteuerung" 
                    Margin="0 5 0 5"/>
 
-            <Label Grid.Column="1" Grid.Row="8" 
+            <Label Grid.Column="1" Grid.Row="9" 
                    Content="Copy these strings to the fields at Aufnahmesteuerung:" 
                    Margin="0 5 0 5"/>
 
-            <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="9" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="10" VerticalAlignment="Top">
                 <Button 
                         ToolTip="Copy to Clipboard" 
                         Width="24"
@@ -114,14 +118,14 @@
                 <Label Content="Create" />
             </StackPanel>
 
-            <TextBox Grid.Column="1" Grid.Row="9" 
+            <TextBox Grid.Column="1" Grid.Row="10" 
                      Name="CreateParameterString"
                      Text="{Binding CreateParameterString,UpdateSourceTrigger=PropertyChanged}" 
                      TextWrapping="Wrap"
                      MaxLines="4"
                      IsReadOnly="True"/>
 
-            <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="10" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="11" VerticalAlignment="Top">
                 <Button 
                     ToolTip="Copy to Clipboard" 
                     Command="{Binding CopyToClipBoard}" 
@@ -134,7 +138,7 @@
                 <Label Content="Remove" />
             </StackPanel>
 
-            <TextBox Grid.Column="1" Grid.Row="10" 
+            <TextBox Grid.Column="1" Grid.Row="11" 
                      Name="RemoveParameterString"
                      Text="{Binding RemoveParameterString,UpdateSourceTrigger=PropertyChanged}" 
                      TextWrapping="Wrap"

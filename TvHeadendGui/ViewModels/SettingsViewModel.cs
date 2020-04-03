@@ -38,6 +38,7 @@ namespace TvHeadendGui.ViewModels
         public DelegateCommand<string> CopyToClipBoard { get; set; }
 
         public string ServerName { get; set; }
+        public string ServerPath { get; set; }
         public int PortNumber { get; set; }
         public bool UseTls { get; set; }
 
@@ -162,6 +163,7 @@ namespace TvHeadendGui.ViewModels
         private void LoadSettingsData()
         {
             ServerName = Settings.Default.ServerName;
+            ServerPath = Settings.Default.ServerPath;
             PortNumber = Settings.Default.PortNumber;
             UseTls = Settings.Default.UseTls;
             
@@ -206,6 +208,7 @@ namespace TvHeadendGui.ViewModels
                 Settings.Default.Save();
                 Settings.Default.Reload();
                 ServerName = Settings.Default.ServerName;
+                ServerPath = Settings.Default.ServerPath;
                 PortNumber = Settings.Default.PortNumber;
             }
 
@@ -218,6 +221,7 @@ namespace TvHeadendGui.ViewModels
         {
             Settings.Default.PortNumber = PortNumber;
             Settings.Default.ServerName = ServerName;
+            Settings.Default.ServerPath = ServerPath;
             Settings.Default.UseTls = UseTls;
             Settings.Default.AuthenticationRequired = AuthenticationRequired;
             Settings.Default.SaveCredentialsToWindowsCredentialStore = SaveCredentials;
@@ -227,7 +231,7 @@ namespace TvHeadendGui.ViewModels
                 CredentialHelper.ResetCredential(new NetworkCredential(UserName, Password));
 
             var protocol = UseTls ? "https://" : "http://";
-            var url = $"{protocol}{ServerName}:{PortNumber}/";
+            var url = $"{protocol}{ServerName}:{PortNumber}{ServerPath}";
 
             TvHeadend.TvHeadendBaseUri = new Uri(url);
             TvHeadend.Credentials = new Credential {Password = Password, UserName = UserName};
