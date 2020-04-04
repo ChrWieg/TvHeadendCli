@@ -51,8 +51,15 @@ namespace TvHeadendLib
         public TvHeadend(string[] args)
         {
             var url = GetUrlFromArgs(args);
+            if (url == null)
+                throw  new ArgumentNullException("TvHeadend(string[] args) error: unable to extract url from args.");
+
             TvHeadendBaseUri = new Uri(url);
             Credentials = GetCredentialsFromArgs(args);
+
+            //if (Credentials == null)
+            //    throw new ArgumentNullException("TvHeadend(string[] args) error: unable to extract url from args.");
+
             InitializeRestClient();
         }
 
@@ -242,7 +249,7 @@ namespace TvHeadendLib
         /// Tests configuration and availability of the rest client.
         /// </summary>
         /// <returns>Rest status code or rest error exception or exception message</returns>
-        public string RestClientIsWorking()
+        public string GetRestClientIsWorking()
         {
             if (_restClient == null)
                 return "Not initialized yet";
@@ -279,6 +286,46 @@ namespace TvHeadendLib
 
             return "Okay";
         }
+
+        public string GetTvHeadendVersion()
+        {
+            if (_restClient == null)
+                return "Not initialized yet";
+
+            try
+            {
+                var command = "/api/serverinfo";
+                var request = new RestRequest(command, Method.GET)
+                {
+                    RequestFormat = DataFormat.Json,
+                    AlwaysMultipartFormData = true
+                };
+
+                var response = _restClient.Execute(request);
+
+                if (response.ErrorException != null)
+                {
+                    if (response.ErrorException.InnerException != null)
+                        return $"{response.ErrorException.InnerException.Message}";
+
+                    return $"{response.ErrorException.Message}";
+                }
+
+                if (!response.IsSuccessful)
+                {
+                    return $"{response.StatusCode.ToString()}";
+                }
+
+                var version = GetObjectFromJsonSting<TvHeadendVersion>(response.Content);
+                return $"Software: {version.sw_version} - API: {version.api_version}";
+
+            }
+            catch (WebException ex)
+            {
+                return ex.Message;
+            }
+        }
+
 
         /// <summary>
         /// First configure TvHeadend and test the rest client (RestClientIsWorking).
@@ -459,6 +506,9 @@ namespace TvHeadendLib
 
             for (var i = 0; i < args.Length; i++)
             {
+                if (args[i].Length < 3)
+                    continue;
+
                 switch (args[i].Substring(0, 3).ToLower())
                 {
                     case "-un":
@@ -480,7 +530,7 @@ namespace TvHeadendLib
         {
             foreach (var t in args)
             {
-                if (t.Substring(0, 4).ToLower() == "-url")
+                if (t.Length >=4 && t.Substring(0, 4).ToLower() == "-url")
                     return t.Substring(4).Trim();
             }
 
@@ -489,6 +539,9 @@ namespace TvHeadendLib
 
         private string CleanDescription(string description)
         {
+            if (string.IsNullOrWhiteSpace(description))
+                return "";
+
             var result = description;
 
             result = result.Replace("\r\n", " ");

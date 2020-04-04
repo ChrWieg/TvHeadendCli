@@ -58,7 +58,7 @@ namespace TvHeadendLib.Interfaces
         /// Tests configuration and availability of the rest client.
         /// </summary>
         /// <returns>Rest status code or rest error exception or exception message</returns>
-        string RestClientIsWorking();
+        string GetRestClientIsWorking();
 
         /// <summary>
         /// First configure TvHeadend and test the rest client (RestClientIsWorking).
@@ -73,6 +73,8 @@ namespace TvHeadendLib.Interfaces
         /// </summary>
         /// <returns>Remove-Parameters for Aufnahmesteuerung</returns>
         string GetRemoveParameterString();
+
+        string GetTvHeadendVersion();
 
     }
 }

@@ -52,6 +52,7 @@ namespace TvHeadendGui.ViewModels
 
         public string RemoveParameterString { get; set; }
         public string DotNetVersion { get; set; }
+        public string TvHeadendVersion { get; set; }
 
         [AlsoNotifyFor(nameof(StatusText))]
         public SolidColorBrush StatusTextColor { get; set; }
@@ -114,6 +115,7 @@ namespace TvHeadendGui.ViewModels
                 SettingsChanged = true;
             };
             DotNetVersion = GetDotNetVersion.Get45PlusFromRegistry();
+            TvHeadendVersion = tvHeadend.GetTvHeadendVersion();
         }
 
         private void OnCopyToClipboard(string content)
@@ -193,7 +195,7 @@ namespace TvHeadendGui.ViewModels
             if (SettingsChanged)
                 OnSaveChanges();
 
-            var testResult = TvHeadend.RestClientIsWorking();
+            var testResult = TvHeadend.GetRestClientIsWorking();
             StatusText = $"{(testResult.Contains("Okay") ? TestOkayStatusText : TestFailedStatusText)} {testResult}";
         }
 

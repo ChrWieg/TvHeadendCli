@@ -60,7 +60,8 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
+                <RowDefinition Height="Auto" ></RowDefinition>
+                <RowDefinition Height="Auto" ></RowDefinition>
                 <RowDefinition ></RowDefinition>
                 <RowDefinition ></RowDefinition>
             </Grid.RowDefinitions>
@@ -148,6 +149,8 @@
 
             <Label Grid.Column="0" Grid.Row="12" Content=".Net-Version" />
             <Label Grid.Column="1" Grid.Row="12" Content="{Binding DotNetVersion}" />
+            <Label Grid.Column="0" Grid.Row="13" Content="TV Headend Version" />
+            <Label Grid.Column="1" Grid.Row="13" Content="{Binding TvHeadendVersion}" />
 
         </Grid>
 

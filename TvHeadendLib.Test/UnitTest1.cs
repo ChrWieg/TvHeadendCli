@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RestSharp;
 
 namespace TvHeadendLib.Test
 {
@@ -8,19 +10,8 @@ namespace TvHeadendLib.Test
         [TestMethod]
         public void TestMethod1()
         {
-
-            //var client = new RestClient();
-
-            //client.BaseUrl = new Uri("http://pihole:9981/");
-            
-
-            //request.AddHeader("Content-Type", "application/x-www-form-urlencoded"); //Tried also with application/json
-            //request.AddHeader("Authorization", "key <my key>");
-
-            //request.AddParameter("username", "User");
-            //request.AddParameter("password", "***");
-
-            //IRestResponse response = client.Execute(request);
+            var tvHeadend = new TvHeadend("http://192.168.63.10:9981/", true);
+            var version = tvHeadend.GetTvHeadendVersion();
         }
     }
 }
